@@ -1,0 +1,40 @@
+<div class="service">
+  <div class="frontend-header">
+    <div class="status"><span>Pozíciók kezelése</span></div>
+    <img alt="login_v2_top.png" src="../../assets/img/login/login_v2_top.png">
+    <button routerLink="/logout">kilépés</button>
+  </div>
+  <div class="frontend-body">
+    <div *ngFor="let tray of mixed_trays" class="trays">
+      <div class="tray">
+        <div (click)="setPosition(spiral.serpaSpiralId)" *ngFor="let spiral of tray" [ngClass]="{
+        'used': spiral.isUsed,
+        'not-used': !spiral.isUsed,
+        'locked': spiral.isLocked
+        }" class="spiral no-select">
+          <span>{{spiral.name}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="trays">
+      <div class="tray">
+        <div class="spiral-help no-select used">
+          <span>használatban van</span>
+        </div>
+        <div class="spiral-help no-select locked">
+          <span>használatban, de letiltva</span>
+        </div>
+        <div class="spiral-help no-select not-used">
+          <span>nincs használva</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="frontend-footer">
+    <div [innerHTML]="irmmatFooter"></div>
+    <p class="automata-status">Automata <span *ngIf="!getIsOnline()" class="offline">offline</span><span
+      *ngIf="getIsOnline()"
+      class="online">online</span>
+  </div>
+</div>
