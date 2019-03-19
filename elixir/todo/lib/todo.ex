@@ -1,25 +1,14 @@
 defmodule Todo do
-  @moduledoc """
-  Documentation for Todo.
-  """
-
-  @doc """
-  A basic todo application capable of adding, removing, updating and completing tasks.
-
-  Functions:
-  read_todo_list_from_file/1
-  add_to_todo_list/1
-  remove_from_todo_list/1
-  complete_selected_task/1
-  update_selected_task/2
-  """
   def main do
-    main_menu()
+    main_menu("0")
   end
 
-  def main_menu do
+  defp main_menu(cycle_break) when cycle_break === "5" do
+    IO.puts("Bye.")
+  end
+
+  defp main_menu(cycle_break) do
     filename = "todo"
-    create_file_if_not_exists(filename)
 
     choice =
       String.trim(
@@ -36,24 +25,22 @@ defmodule Todo do
     cond do
       choice === "1" ->
         IO.puts(read_todo_list_from_file(filename))
+        main_menu(choice)
 
       choice === "2" ->
-        add_to_todo_list(filename)
+        IO.puts("Added: " <> add_to_todo_list(filename))
+        main_menu(choice)
 
       choice === "3" ->
-        remove_from_todo_list(filename)
+        IO.puts("Removed: " <> remove_from_todo_list(filename))
+        main_menu(choice)
 
       choice === "4" ->
-        nil
+        IO.puts("Completed: " <> complete_selected_task(filename))
+        main_menu(choice)
 
       choice === "5" ->
-        nil
-    end
-  end
-
-  def create_file_if_not_exists(filename) do
-    if File.exists?(filename) == false do
-      File.open(filename, [:write])
+        main_menu(choice)
     end
   end
 
@@ -63,9 +50,8 @@ defmodule Todo do
     |> Enum.to_list()
   end
 
-  def write_todo_list_to_file(filename, todo_list, task) do
+  def write_todo_list_to_file(filename, todo_list) do
     File.write!(filename, todo_list)
-    IO.puts("Added " <> task)
   end
 
   def add_to_todo_list(filename) do
@@ -77,23 +63,41 @@ defmodule Todo do
     else
       insert_task(filename, todo_list, task)
     end
+
+    task
   end
 
   def insert_first_task(filename, todo_list, task) do
     todo_list = [todo_list | task <> "[]"]
-    write_todo_list_to_file(filename, todo_list, task)
+    write_todo_list_to_file(filename, todo_list)
   end
 
   def insert_task(filename, todo_list, task) do
     todo_list = [todo_list | "\n" <> task <> "[]"]
-    write_todo_list_to_file(filename, todo_list, task)
+    write_todo_list_to_file(filename, todo_list)
   end
 
   def remove_from_todo_list(filename) do
     task = String.trim(IO.gets("Which task would you like to delete?\n"))
     todo_list = read_todo_list_from_file(filename)
-    todo_list = Enum.filter(todo_list, fn x -> x != task <> "[]" end)
-    File.write!(filename, todo_list)
-    IO.puts("Removed: " <> task)
+
+    todo_list =
+      Enum.filter(todo_list, fn x ->
+        uncompleted_task = task <> "[]" <> "\n"
+        completed_task = task <> "[\u{2713}]" <> "\n"
+        x != uncompleted_task || x != completed_task
+      end)
+
+    IO.puts(todo_list)
+    write_todo_list_to_file(filename, todo_list)
+    task
+  end
+
+  def complete_selected_task(filename) do
+    task = String.trim(IO.gets("Which task would you like to complete?\n"))
+    todo_list = read_todo_list_from_file(filename)
+    todo_list = String.replace(List.to_string(todo_list), task <> "[]", task <> "[\u{2713}]")
+    write_todo_list_to_file(filename, todo_list)
+    task
   end
 end
