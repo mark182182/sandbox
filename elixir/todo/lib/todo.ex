@@ -14,9 +14,41 @@ defmodule Todo do
   update_selected_task/2
   """
   def main do
-    filename = String.trim(IO.gets("Please specifiy the file name!\n"))
+    main_menu()
+  end
+
+  def main_menu do
+    filename = "todo"
     create_file_if_not_exists(filename)
-    read_todo_list_from_file(filename)
+
+    choice =
+      String.trim(
+        IO.gets(
+          "What would you like to do?\n" <>
+            "1 - List all tasks\n" <>
+            "2 - Add a task\n" <>
+            "3 - Remove a task\n" <>
+            "4 - Complete a task\n" <>
+            "5 - Exit\n"
+        )
+      )
+
+    cond do
+      choice === "1" ->
+        IO.puts read_todo_list_from_file(filename)
+
+      choice === "2" ->
+        add_to_todo_list(filename)
+
+      choice === "3" ->
+        nil
+
+      choice === "4" ->
+        nil
+
+      choice === "5" ->
+        nil
+    end
   end
 
   def create_file_if_not_exists(filename) do
@@ -26,6 +58,34 @@ defmodule Todo do
   end
 
   def read_todo_list_from_file(filename) do
-    String.split(File.read!(filename))
+    File.stream!(filename)
+    |> Enum.map(fn line -> line end)
+    |> Enum.to_list()
+  end
+
+  def write_todo_list_to_file(filename, todo_list, task) do
+    File.write!(filename, todo_list)
+    IO.puts("Added " <> task)
+  end
+
+  def add_to_todo_list(filename) do
+    task = String.trim(IO.gets("Please write a new task:\n"))
+    todo_list = read_todo_list_from_file(filename)
+
+    if length(todo_list) < 1 do
+      insert_first_task(filename, todo_list, task)
+    else
+      insert_task(filename, todo_list, task)
+    end
+  end
+
+  def insert_first_task(filename, todo_list, task) do
+    todo_list = [todo_list | task <> "[]"]
+    write_todo_list_to_file(filename, todo_list, task)
+  end
+
+  def insert_task(filename, todo_list, task) do
+    todo_list = [todo_list | "\n" <> task <> "[]"]
+    write_todo_list_to_file(filename, todo_list, task)
   end
 end
