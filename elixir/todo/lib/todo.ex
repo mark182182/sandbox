@@ -82,10 +82,13 @@ defmodule Todo do
     todo_list = read_todo_list_from_file(filename)
 
     todo_list =
-      Enum.filter(todo_list, fn x ->
+      Enum.filter(todo_list, fn current_task ->
         uncompleted_task = task <> "[]" <> "\n"
+        current_task != uncompleted_task
+      end)
+      |> Enum.filter(fn current_task ->
         completed_task = task <> "[\u{2713}]" <> "\n"
-        x != uncompleted_task || x != completed_task
+        current_task != completed_task
       end)
 
     IO.puts(todo_list)
