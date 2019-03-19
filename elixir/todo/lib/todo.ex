@@ -7,7 +7,7 @@ defmodule Todo do
     IO.puts("Bye.")
   end
 
-  defp main_menu(cycle_break) do
+  defp main_menu(_cycle_break) do
     filename = "todo"
 
     choice =
