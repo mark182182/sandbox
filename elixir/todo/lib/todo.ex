@@ -35,13 +35,13 @@ defmodule Todo do
 
     cond do
       choice === "1" ->
-        IO.puts read_todo_list_from_file(filename)
+        IO.puts(read_todo_list_from_file(filename))
 
       choice === "2" ->
         add_to_todo_list(filename)
 
       choice === "3" ->
-        nil
+        remove_from_todo_list(filename)
 
       choice === "4" ->
         nil
@@ -87,5 +87,13 @@ defmodule Todo do
   def insert_task(filename, todo_list, task) do
     todo_list = [todo_list | "\n" <> task <> "[]"]
     write_todo_list_to_file(filename, todo_list, task)
+  end
+
+  def remove_from_todo_list(filename) do
+    task = String.trim(IO.gets("Which task would you like to delete?\n"))
+    todo_list = read_todo_list_from_file(filename)
+    todo_list = Enum.filter(todo_list, fn x -> x != task <> "[]" end)
+    File.write!(filename, todo_list)
+    IO.puts("Removed: " <> task)
   end
 end
