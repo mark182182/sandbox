@@ -16,9 +16,13 @@ defmodule PhoenixHotelWeb.Router do
   scope "/", PhoenixHotelWeb do
     pipe_through :browser
 
-    get "/home/:hotel", HomeController, :hotel
+    put "/hotel/:id/:hotel", HotelController, :update
+    post "/hotel/:hotel", HotelController, :create
+    delete "/hotel/:id", HotelController, :delete
+    get "/hotel/:id", HotelController, :show
+    get "/hotel", HotelController, :index
     get "/home", HomeController, :home
-    get "/", PageController, :index
+    get "/", HomeController, :home
   end
 
   # Other scopes may use custom stacks.
