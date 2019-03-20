@@ -1,1 +1,1 @@
-<h1>From template: Home! <h1>
+<%= ReactPhoenix.ClientSide.react_component("Components.Home") %>

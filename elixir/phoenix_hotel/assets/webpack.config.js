@@ -18,6 +18,12 @@ module.exports = (env, options) => ({
   output: {
     filename: 'app.js',
     path: path.resolve(__dirname, '../priv/static/js')
+	},
+  resolve: {
+		alias: {
+      react: path.resolve(__dirname, './node_modules/react'),
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom')
+    }
   },
   module: {
     rules: [

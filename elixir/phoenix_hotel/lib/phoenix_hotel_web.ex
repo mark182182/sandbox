@@ -41,6 +41,7 @@ defmodule PhoenixHotelWeb do
 
       import PhoenixHotelWeb.ErrorHelpers
       import PhoenixHotelWeb.Gettext
+      import ReactPhoenix
       alias PhoenixHotelWeb.Router.Helpers, as: Routes
     end
   end
