@@ -16,6 +16,7 @@ defmodule PhoenixHotelWeb.Router do
   scope "/", PhoenixHotelWeb do
     pipe_through :browser
 
+    get "/home", HomeController, :home
     get "/", PageController, :index
   end
 
