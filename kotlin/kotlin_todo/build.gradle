@@ -33,6 +33,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    runtimeOnly group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '7.2.0.jre8'
 }
 
 compileKotlin {
