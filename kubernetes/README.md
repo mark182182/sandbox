@@ -1,51 +1,51 @@
 ### Kubectl commands
 
 #### Get resource (service/pod/deloyment/node/crd)
-kubectl get [resource]
+- kubectl get [resource]
 #### Get all namespaces for the pods
-kubectl get pods --all-namespaces
+- kubectl get pods --all-namespaces
 #### Describe resource information
-kubectl describe [resource]
+- kubectl describe [resource]
 #### Get information about different fields
-kubectl explain pod.spec.restartPolicy
+- kubectl explain pod.spec.restartPolicy
 #### Apply configuration
-kubectl apply -f (file or folder) [target]
+- kubectl apply -f (file or folder) [target]
 #### Apply kustomization.yml
-kubectl apply -k (kustomization.yml) [target]
+- kubectl apply -k (kustomization.yml) [target]
 #### View the difference between the given file and the currently applied config
-kubectl diff -f [filename]
+- kubectl diff -f [filename]
 #### Edit a specified resource
-kubectl edit [resource] [name]
+- kubectl edit [resource] [name]
 #### View logs of a pod
-kubectl logs [name]
+- kubectl logs [name]
 #### View logs using label selector
-kubectl logs -l app=blue-green
+- kubectl logs -l app=blue-green
 #### Expose port
-kubectl expose pod green --port 8080 --name blue-green
+- kubectl expose pod green --port 8080 --name blue-green
 #### Delete resource
-kubectl delete [resource] [name]
+- kubectl delete [resource] [name]
 #### Port forwarding
-kubectl port-forward [pod] [from]:[to]
+- kubectl port-forward [pod] [from]:[to]
 #### Exec into pod
-kubectl exec -it [name] [command]
+- kubectl exec -it [name] [command]
 #### Exec into pod with a different namespace
-kubectl exec -n [namespace] -it [name] -- [command]
+- kubectl exec -n [namespace] -it [name] -- [command]
 #### View pod metrics
-kubectl top [name]
+- kubectl top [name]
 #### View the current kubernetes API definition
-kubectl api-resources
+- kubectl api-resources
 #### Creating a ConfigMap from a file
-kubectl create configmap [name] --from-file=[filename]
+- kubectl create configmap [name] --from-file=[filename]
 #### Useful for testing the output of a command
-kubectl [commands] --dry-run -o yaml
+- kubectl [commands] --dry-run -o yaml
 #### Create new namespace
-kubectl create namespace [name]
+- kubectl create namespace [name]
 #### Switch to a namespace
-kubectl config set-context --current --namespace=[name]
+- kubectl config set-context --current --namespace=[name]
 #### Wait for a pod to  be ready
-kubectl wait --for=condition=Ready pod -l app=[name] -n [namespace]
+- kubectl wait --for=condition=Ready pod -l app=[name] -n [namespace]
 #### View kustomize config
-kubectl kustomize [directory]
+- kubectl kustomize [directory]
 
 #### Using Krew package manager
 #### Debugging a pod
