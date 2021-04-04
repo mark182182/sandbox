@@ -49,9 +49,9 @@
 
 #### Using Krew package manager
 #### Debugging a pod
-kubectl debug [name] --attach
+- kubectl debug [name] --attach
 #### Viewing the network traffic of a pod
-kubectl sniff [pod]
+- kubectl sniff [pod]
 
 ### Kube specific info:
 - Worker nodes are the containers where pods are placed into
