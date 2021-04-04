@@ -47,6 +47,11 @@
 #### View kustomize config
 - kubectl kustomize [directory]
 
+#### For production usage
+- kubeadm for install
+- kops for deploy
+- AKS/EKS etc. for cloud managers
+
 #### Using Krew package manager
 #### Debugging a pod
 - kubectl debug [name] --attach
