@@ -231,3 +231,8 @@ hs_err_pid*
 
 .exe
 .vscode
+glad
+KHR
+glad*
+GLFW
+glfw3dll.lib

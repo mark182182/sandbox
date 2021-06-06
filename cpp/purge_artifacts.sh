@@ -4,9 +4,10 @@
 artifacts=$(find . | grep ".exe")
 num_of_artifacts=$(wc -l <<< $artifacts)
 if [[ $num_of_artifacts > 0 ]]; then
-  echo "Purging..."
+  echo ""
   for artifact in $artifacts
     do
+      echo "🗑️  Deleting $artifact..."
       rm -rf $artifact
     done
 fi
