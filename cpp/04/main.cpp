@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <glm/vec3.hpp>
+#include <bullet/btBulletDynamicsCommon.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
