@@ -6,6 +6,9 @@
 #include <glm/vec3.hpp>
 #include <bullet/btBulletDynamicsCommon.h>
 
+bool WIREFRAME_MODE = false;
+bool TAB_PRESSED = false;
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
   glViewport(0, 0, width, height);
@@ -15,6 +18,26 @@ void processInput(GLFWwindow *window)
 {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
+
+  int TAB_PRESS = glfwGetKey(window, GLFW_KEY_TAB);
+
+  if (TAB_PRESS == GLFW_PRESS && TAB_PRESSED != true)
+  {
+    TAB_PRESSED = true;
+    WIREFRAME_MODE = !WIREFRAME_MODE;
+    if (WIREFRAME_MODE)
+    {
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    else
+    {
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+  }
+  if (TAB_PRESS == GLFW_RELEASE)
+  {
+    TAB_PRESSED = false;
+  }
 }
 
 std::string read_file(std::string filename)
@@ -122,11 +145,19 @@ int main()
   glDeleteShader(fragmentShader);
 
   float vertices[] = {
-      -0.5f, -0.5f, 0.0f,
-      0.5f, -0.5f, 0.0f,
-      0.0f, 0.5f, 0.0f};
+      0.5f, 0.5f, 0.0f,   // top right
+      0.5f, -0.5f, 0.0f,  // bottom right
+      -0.5f, -0.5f, 0.0f, // bottom left
+      -0.5f, 0.5f, 0.0f   // top left
+  };
 
-  unsigned int VBO, VAO;
+  unsigned int indices[] = {
+      // note that we start from 0!
+      0, 1, 3, // first triangle
+      1, 2, 3  // second triangle
+  };
+
+  unsigned int VBO, VAO, EBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
@@ -134,6 +165,10 @@ int main()
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
@@ -151,6 +186,7 @@ int main()
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Swap front and back buffers
     glfwSwapBuffers(window);
