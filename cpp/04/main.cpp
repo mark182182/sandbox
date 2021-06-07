@@ -145,10 +145,10 @@ int main()
   glDeleteShader(fragmentShader);
 
   float vertices[] = {
-      0.5f, 0.5f, 0.0f,   // top right
+      0.2f, 0.8f, 0.0f,   // top right
       0.5f, -0.5f, 0.0f,  // bottom right
       -0.5f, -0.5f, 0.0f, // bottom left
-      -0.5f, 0.5f, 0.0f   // top left
+      -0.2f, 0.8f, 0.0f   // top left
   };
 
   unsigned int indices[] = {
@@ -185,8 +185,9 @@ int main()
 
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // glDrawArrays(GL_TRIANGLES, 0, 3);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 
     // Swap front and back buffers
     glfwSwapBuffers(window);
