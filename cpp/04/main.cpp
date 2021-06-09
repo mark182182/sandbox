@@ -77,6 +77,15 @@ void check_shader_compile_status(unsigned int vertexShader)
   }
 }
 
+unsigned int compile_shader(const char *serializedShader, int type)
+{
+  unsigned int shader = glCreateShader(type);
+  glShaderSource(shader, 1, &serializedShader, NULL);
+  glCompileShader(shader);
+  check_shader_compile_status(shader);
+  return shader;
+}
+
 void check_shader_program_compile_status(unsigned int shaderProgram)
 {
   int success;
@@ -103,6 +112,7 @@ int main()
 {
   std::string vertexShaderStr = read_file("shaders/vertex.vs");
   std::string fragmentShaderStr = read_file("shaders/fragment.fs");
+  std::string blueShaderStr = read_file("shaders/shade_of_blue.fs");
 
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -127,19 +137,10 @@ int main()
 
   // Shader ordering is important:
   // 1. We create the vertex shader to assemble the shape
-  unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  const char *vtxShdrSource = vertexShaderStr.c_str();
-  glShaderSource(vertexShader, 1, &vtxShdrSource, NULL);
-  glCompileShader(vertexShader);
+  unsigned int vertexShader = compile_shader(vertexShaderStr.c_str(), GL_VERTEX_SHADER);
 
   // 2. We create the fragment shader to colorize the shape
-  unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  const char *frgmntShdrSource = fragmentShaderStr.c_str();
-  glShaderSource(fragmentShader, 1, &frgmntShdrSource, NULL);
-  glCompileShader(fragmentShader);
-
-  check_shader_compile_status(vertexShader);
-  check_shader_compile_status(fragmentShader);
+  unsigned int fragmentShader = compile_shader(fragmentShaderStr.c_str(), GL_FRAGMENT_SHADER);
 
   unsigned int shaderProgram = glCreateProgram();
 
