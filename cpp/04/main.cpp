@@ -142,12 +142,23 @@ int main()
   // 2. We create the fragment shader to colorize the shape
   unsigned int fragmentShader = compile_shader(fragmentShaderStr.c_str(), GL_FRAGMENT_SHADER);
 
+  // Same with the blue one
+  unsigned int blueShader = compile_shader(blueShaderStr.c_str(), GL_FRAGMENT_SHADER);
+
   unsigned int shaderProgram = glCreateProgram();
 
   // We attach the shaders in order to the program
   glAttachShader(shaderProgram, vertexShader);
   glAttachShader(shaderProgram, fragmentShader);
   glLinkProgram(shaderProgram);
+
+  // what is this, a washing machine? lol
+  unsigned int blueProgram = glCreateProgram();
+
+  // Same with the blue one
+  glAttachShader(blueProgram, vertexShader);
+  glAttachShader(blueProgram, blueShader);
+  glLinkProgram(blueProgram);
 
   check_shader_program_compile_status(shaderProgram);
 
@@ -191,7 +202,7 @@ int main()
   {
     processInput(window);
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.4f, 0.2f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(shaderProgram);
@@ -200,6 +211,7 @@ int main()
     {
       glBindVertexArray(VAOs[i]);
       glDrawArrays(GL_TRIANGLES, 0, 3);
+      glUseProgram(blueProgram);
     }
 
     // glDrawElements(GL_TRIANGLES, 20, GL_UNSIGNED_INT, 0);
