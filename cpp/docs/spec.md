@@ -1,5 +1,10 @@
 ### Notes on the language specification and other stuff
 
+Dangling pointers:
+
+- Cause: pointing to a memory location which has been deleted/freed
+- Solution: Initialize pointer to NULL
+
 Vertex input:
 
 - Floating point coordinate data in 3D space. Can be absolute or normalized values (from -1.0 to 1.0).
