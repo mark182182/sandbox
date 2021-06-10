@@ -8,6 +8,7 @@ Place into your include folder (Microsoft Visual Studio\2019\Community\VC\Tools\
 - GLFW
 - KHR
 - glm
+- stb
 - bullet3
 
 Future:

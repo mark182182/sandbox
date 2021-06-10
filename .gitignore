@@ -237,3 +237,4 @@ KHR
 glad*
 GLFW
 glfw3dll.lib
+*stb_*.cpp

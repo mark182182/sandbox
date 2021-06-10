@@ -5,6 +5,7 @@
 #include <string>
 #include <glm/vec3.hpp>
 #include <bullet/btBulletDynamicsCommon.h>
+#include <stb_image.h>
 
 bool WIREFRAME_MODE = false;
 bool TAB_PRESSED = false;
@@ -104,8 +105,12 @@ void bind_buffers(float vertices[], int vertices_size, unsigned int VBO, unsigne
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0); // Vertex attributes stay the same
+  // position
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+  // color
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 }
 
 int main()
@@ -166,14 +171,36 @@ int main()
   glDeleteShader(fragmentShader);
 
   float triangle1[] = {
-      0.5f, 0.5f, 0.0f,
-      0.5f, -0.5f, 0.0f,
-      -0.5f, -0.5f, 0.0f};
+      0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f};
 
   float triangle2[] = {
-      -0.4f, 0.4f, 0.0f,
-      -0.5f, 0.5f, 0.0f,
-      -0.5f, 0.0f, 0.0f};
+      -0.4f, 0.4f, 0.0f, 0.0f, 0.0f, 0.6f,
+      -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+      -0.5f, 0.0f, 0.0f, 0.8f, 0.0f, 1.0f};
+
+  int width, height, nrChannels;
+  unsigned char *data = stbi_load("honkler.jpg", &width, &height,
+                                  &nrChannels, 0);
+
+  float textureCoords[] = {
+      0.0f, 0.0f,
+      1.0f, 0.0f,
+      1.0f, 1.0f};
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+
+  float borderColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
+
+  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   // unsigned int indices[] = {
   //     0, 1, 2,
@@ -185,6 +212,14 @@ int main()
 
   bind_buffers(triangle1, sizeof(triangle1), VBOs[0], VAOs[0]);
   bind_buffers(triangle2, sizeof(triangle2), VBOs[1], VAOs[1]);
+
+  unsigned int texture;
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  stbi_image_free(data);
   std::cout << "buffers are bound" << std::endl;
   // glGenBuffers(1, &EBO);
   // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -205,8 +240,13 @@ int main()
     glClearColor(0.4f, 0.2f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    float timeValue = glfwGetTime();
+    float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "uniformColor");
     glUseProgram(shaderProgram);
-    // glBindVertexArray(VAO);
+
+    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
     for (int i = 0; i < sizeof(VAOs) / sizeof(int); i++)
     {
       glBindVertexArray(VAOs[i]);

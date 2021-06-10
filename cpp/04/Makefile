@@ -1,7 +1,7 @@
 CXX := clang
 CXX_FLAGS := -pedantic-errors -v -Wall -Weffc++ -Wextra -Wsign-conversion -Werror -std=c++17
 
-LIBRARIES := glfw3dll.lib glad.c
+LIBRARIES := glfw3dll.lib glad.c stb_image.cpp
 EXECUTABLE := main
 
 run: $(EXECUTABLE)
