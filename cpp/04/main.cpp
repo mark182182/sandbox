@@ -55,6 +55,15 @@ void bind_buffers(float vertices[], int vertices_size, unsigned int VBO, unsigne
   glEnableVertexAttribArray(1);
 }
 
+void set_time_based_float_value(Shader shader, const char *uniformVarName)
+{
+  float timeValue = glfwGetTime();
+  float timeBasedValue = (sin(timeValue) / 2.0f) + 0.5f;
+  int uniformLocation = glGetUniformLocation(shader.ID, uniformVarName);
+  shader.use();
+  glUniform1f(uniformLocation, timeBasedValue);
+}
+
 int main()
 {
   glfwInit();
@@ -79,7 +88,7 @@ int main()
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
   Shader defaultShader = Shader("shaders/vertex.vs", "shaders/fragment.fs");
-  Shader blueShader = Shader("shaders/vertex.vs", "shaders/shade_of_blue.fs");
+  Shader positionBasedShader = Shader("shaders/vertex.vs", "shaders/fragment_position.fs");
 
   float triangle1[] = {
       0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -147,22 +156,25 @@ int main()
   while (!glfwWindowShouldClose(window))
   {
     processInput(window);
-
     glClearColor(0.4f, 0.2f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    float timeValue = glfwGetTime();
-    float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-    int vertexColorLocation = glGetUniformLocation(defaultShader.ID, "uniformColor");
-    defaultShader.use();
+    float timeValue2 = glfwGetTime();
+    float timeBasedValue2 = (sin(timeValue2) / 2.0f) + 0.5f * -0.5f;
+    triangle2[12] = timeBasedValue2;
+    triangle2[13] = timeBasedValue2;
+    triangle2[14] = timeBasedValue2;
+    bind_buffers(triangle2, sizeof(triangle2), VBOs[1], VAOs[1]);
 
-    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+    set_time_based_float_value(defaultShader, "xOffset");
+
+    // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
     for (int i = 0; i < sizeof(VAOs) / sizeof(int); i++)
     {
       glBindVertexArray(VAOs[i]);
       glDrawArrays(GL_TRIANGLES, 0, 3);
-      blueShader.use();
+      set_time_based_float_value(positionBasedShader, "xOffset");
     }
 
     // glDrawElements(GL_TRIANGLES, 20, GL_UNSIGNED_INT, 0);
@@ -178,6 +190,7 @@ int main()
   glDeleteVertexArrays(2, VAOs);
   glDeleteBuffers(2, VBOs);
   defaultShader.remove();
+  positionBasedShader.remove();
   glfwTerminate();
   return 0;
 }
