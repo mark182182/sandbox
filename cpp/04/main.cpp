@@ -100,12 +100,13 @@ int main()
       -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f};
 
   unsigned int indices[] = {
-      0, 1, 2,
+      0, 1, 3,
       1, 2, 3};
 
   unsigned int vbo, vao, EBO;
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
+  glGenBuffers(1, &EBO);
 
   bind_buffers(triangles, sizeof(triangles), vbo, vao);
   std::cout << "buffers are bound" << std::endl;
@@ -135,7 +136,6 @@ int main()
   {
     std::cerr << "unable to load the texture" << std::endl;
   }
-  glGenBuffers(1, &EBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
