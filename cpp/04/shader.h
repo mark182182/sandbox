@@ -61,7 +61,7 @@ private:
     }
   };
 
-  void check_shader_compile_status(unsigned int vertexShader)
+  void check_shader_compile_status(unsigned int vertexShader, int type)
   {
     int success;
     char infoLog[512];
@@ -69,7 +69,7 @@ private:
     if (!success)
     {
       glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
+      std::cout << "ERROR::SHADER::" << type << "::COMPILATION_FAILED\n"
                 << infoLog << std::endl;
     }
   };
@@ -81,7 +81,7 @@ private:
     serializedShader = read_file(shaderPath).c_str();
     glShaderSource(shader, 1, &serializedShader, NULL);
     glCompileShader(shader);
-    check_shader_compile_status(shader);
+    check_shader_compile_status(shader, type);
     return shader;
   };
 
