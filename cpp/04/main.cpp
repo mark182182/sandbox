@@ -9,26 +9,32 @@
 #include "shader.h"
 #include "texture.h"
 
-bool WIREFRAME_MODE = false;
-bool TAB_PRESSED = false;
+bool wireframe_mode = false;
+bool tab_pressed = false;
+bool up_pressed = false;
+bool down_pressed = false;
+float blend_amount = 0.5f;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
   glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow *window)
+void process_Input(GLFWwindow *window)
 {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
-  int TAB_PRESS = glfwGetKey(window, GLFW_KEY_TAB);
+  int tab_press = glfwGetKey(window, GLFW_KEY_TAB);
 
-  if (TAB_PRESS == GLFW_PRESS && TAB_PRESSED != true)
+  int up_arrow_press = glfwGetKey(window, GLFW_KEY_UP);
+  int down_arrow_press = glfwGetKey(window, GLFW_KEY_DOWN);
+
+  if (tab_press == GLFW_PRESS && tab_pressed != true)
   {
-    TAB_PRESSED = true;
-    WIREFRAME_MODE = !WIREFRAME_MODE;
-    if (WIREFRAME_MODE)
+    tab_pressed = true;
+    wireframe_mode = !wireframe_mode;
+    if (wireframe_mode)
     {
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
@@ -37,9 +43,29 @@ void processInput(GLFWwindow *window)
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
   }
-  if (TAB_PRESS == GLFW_RELEASE)
+  if (tab_press == GLFW_RELEASE)
   {
-    TAB_PRESSED = false;
+    tab_pressed = false;
+  }
+
+  if (blend_amount < 1.0f && up_arrow_press == GLFW_PRESS && up_pressed != true)
+  {
+    up_pressed = true;
+    blend_amount += 0.1f;
+  }
+   else if (blend_amount > 0.0f && down_arrow_press == GLFW_PRESS && down_pressed != true)
+  {
+    down_pressed = true;
+    blend_amount -= 0.1f;
+  }
+
+  if (up_arrow_press == GLFW_RELEASE)
+  {
+    up_pressed = false;
+  }
+   if (down_arrow_press == GLFW_RELEASE)
+  {
+    down_pressed = false;
   }
 }
 
@@ -134,7 +160,7 @@ int main()
 
   while (!glfwWindowShouldClose(window))
   {
-    processInput(window);
+    process_Input(window);
     glClearColor(0.4f, 0.2f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -149,6 +175,7 @@ int main()
     //   set_time_based_float_value(positionBasedShader, "xOffset");
     // }
 
+    defaultShader.setFloat("blendAmount", blend_amount);
     woodTexture.activiate_and_bind(GL_TEXTURE0);
     transparentTexture.activiate_and_bind(GL_TEXTURE1);
     glBindVertexArray(vao);
