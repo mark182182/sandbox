@@ -10,10 +10,10 @@ class Texture
   unsigned int ID;
 
 public:
-  Texture(const char *path, GLenum format)
+  Texture(const char *path, GLenum format, unsigned int type)
   {
     glGenTextures(1, &ID);
-    load_texture(path, format);
+    load_texture(path, format, type);
   };
 
   void activiate_and_bind(GLenum texture)
@@ -23,11 +23,11 @@ public:
   };
 
 private:
-  void load_texture(const char *path, GLenum format)
+  void load_texture(const char *path, GLenum format, unsigned int type)
   {
     glBindTexture(GL_TEXTURE_2D, ID);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, type);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, type);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

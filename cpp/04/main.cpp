@@ -114,8 +114,8 @@ int main()
 
   stbi_set_flip_vertically_on_load(true);
 
-  Texture woodTexture = Texture("textures/wood.jpg", GL_RGB);
-  Texture transparentTexture = Texture("textures/transparent.png", GL_RGBA);
+  Texture woodTexture = Texture("textures/wood.jpg", GL_RGB, GL_REPEAT);
+  Texture transparentTexture = Texture("textures/transparent.png", GL_RGBA, GL_REPEAT);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
