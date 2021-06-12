@@ -5,7 +5,7 @@ LIBRARIES := glfw3dll.lib glad.c stb_image.cpp
 EXECUTABLE := main
 
 run: $(EXECUTABLE)
-	clear
+	# clear
 	@echo "🚀  Executing..."
 	./$(EXECUTABLE).exe
 

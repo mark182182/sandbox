@@ -7,6 +7,7 @@
 #include <bullet/btBulletDynamicsCommon.h>
 #include <stb_image.h>
 #include "shader.h"
+#include "texture.h"
 
 bool WIREFRAME_MODE = false;
 bool TAB_PRESSED = false;
@@ -64,7 +65,7 @@ void set_time_based_float_value(Shader shader, const char *uniformVarName)
   float timeBasedValue = sin(timeValue) / 10;
   int uniformLocation = glGetUniformLocation(shader.ID, uniformVarName);
   shader.use();
-  glUniform1f(uniformLocation, timeBasedValue);
+  shader.setFloat(uniformVarName, timeBasedValue);
 }
 
 int main()
@@ -113,29 +114,9 @@ int main()
 
   stbi_set_flip_vertically_on_load(true);
 
-  unsigned int texture;
-  glGenTextures(1, &texture);
-  // glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, texture);
+  Texture woodTexture = Texture("textures/wood.jpg", GL_RGB);
+  Texture transparentTexture = Texture("textures/transparent.png", GL_RGBA);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  int width, height, nrChannels;
-  unsigned char *data = stbi_load("textures/wood.jpg", &width, &height,
-                                  &nrChannels, 0);
-  if (data)
-  {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(data);
-  }
-  else
-  {
-    std::cerr << "unable to load the texture" << std::endl;
-  }
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
@@ -143,6 +124,13 @@ int main()
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  defaultShader.use();
+  defaultShader.setInt("texture1", 0);
+  defaultShader.setInt("texture2", 1);
 
   while (!glfwWindowShouldClose(window))
   {
@@ -160,8 +148,9 @@ int main()
     //   glDrawArrays(GL_TRIANGLES, 0, 3);
     //   set_time_based_float_value(positionBasedShader, "xOffset");
     // }
-    defaultShader.use();
-    glBindTexture(GL_TEXTURE_2D, texture);
+
+    woodTexture.activiate_and_bind(GL_TEXTURE0);
+    transparentTexture.activiate_and_bind(GL_TEXTURE1);
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
