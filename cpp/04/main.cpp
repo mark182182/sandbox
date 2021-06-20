@@ -14,6 +14,8 @@
 
 const char *WINDOW_NAME = "Test engine";
 GLFWwindow *window = NULL;
+const int WINDOW_HEIGHT = 600;
+const int WINDOW_WIDTH = 800;
 bool wireframe_mode = false;
 bool tab_pressed = false;
 bool up_pressed = false;
@@ -33,7 +35,8 @@ void init_and_set_window_hints() {
 }
 
 int create_window_and_init_libs() {
-  window = glfwCreateWindow(800, 600, WINDOW_NAME, NULL, NULL);
+  window =
+      glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, NULL, NULL);
   if (window == NULL) {
     std::cerr << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -44,7 +47,7 @@ int create_window_and_init_libs() {
     std::cerr << "Failed to init GLAD" << std::endl;
     return -1;
   }
-  glViewport(0, 0, 800, 600);
+  glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   return 1;
 }
@@ -95,16 +98,12 @@ void bind_buffers(float vertices[], int vertices_size, unsigned int VBO,
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
   // position
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
-  // color
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+  // texture
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                         (void *)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
-  // texture
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                        (void *)(6 * sizeof(float)));
-  glEnableVertexAttribArray(2);
 }
 
 void set_uniform_matrix_value(Shader shader, const char *uniformVarName,
@@ -124,12 +123,34 @@ int main() {
   Shader positionBasedShader =
       Shader("shaders/vertex.vs", "shaders/fragment_position.fs");
 
-  float triangles[] = {0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                       0.5f,  -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-                       -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                       -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f};
+  float triangles[] = {
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 0.0f,
+      0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
 
-  unsigned int indices[] = {0, 1, 3, 1, 2, 3};
+      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+      -0.5f, 0.5f,  0.5f,  0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
+
+      -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  0.5f,  1.0f, 0.0f,
+
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+      0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+      -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+      -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
+
+  unsigned int indices[] = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11,
+                            12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+                            24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
 
   unsigned int vbo, vao, ebo;
   glGenVertexArrays(1, &vao);
@@ -157,6 +178,7 @@ int main() {
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_DEPTH_TEST);
 
   std::cout << "Textures are set" << std::endl;
 
@@ -164,32 +186,39 @@ int main() {
   defaultShader.setInt("texture1", 0);
   defaultShader.setInt("texture2", 1);
 
+  glm::mat4 model = glm::mat4(1.0f);
+  model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+  glm::mat4 view = glm::mat4(1.0f);
+  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+  // glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f);
+  glm::mat4 projection = glm::perspective(
+      glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f,
+      100.0f);
   while (!glfwWindowShouldClose(window)) {
     process_Input(window);
     glClearColor(0.4f, 0.2f, 0.8f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glm::mat4 trans1 = glm::mat4(1.0f);
-    trans1 = glm::translate(trans1, glm::vec3(0.5f, -0.5f, 0.0f));
-    trans1 =
-        glm::rotate(trans1, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-    set_uniform_matrix_value(defaultShader, "transform", 1, trans1);
+    set_uniform_matrix_value(defaultShader, "model", 1, model);
+    set_uniform_matrix_value(defaultShader, "view", 1, view);
+    set_uniform_matrix_value(defaultShader, "projection", 1, projection);
+
+    float timeBasedValue = std::sin(float(glfwGetTime())) * ((std::rand() % 2 + 1) - 1);
+
+    model = glm::rotate(model, timeBasedValue * glm::radians(timeBasedValue),
+                        glm::vec3(0.5f, 1.0f, 0.0f));
+
+    int vertexColor = glGetUniformLocation(defaultShader.ID, "vertexColor");
+    glUniform3f(vertexColor, 0.4f, 0.8f, std::sin(float(glfwGetTime())));
 
     defaultShader.setFloat("blendAmount", std::sin(float(glfwGetTime())));
     woodTexture.activiate_and_bind(GL_TEXTURE0);
     transparentTexture.activiate_and_bind(GL_TEXTURE1);
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-    glm::mat4 trans2 = glm::mat4(1.0f);
-    trans2 = glm::translate(trans2, glm::vec3(std::sin((float)glfwGetTime()), 0.5f, 0.0f));
-    trans2 =
-        glm::scale(trans2, glm::vec3(std::abs(std::sin((float)glfwGetTime())),
-                                     std::abs(std::sin((float)glfwGetTime())), 0.0f));
-    trans2 =
-        glm::rotate(trans2, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-    set_uniform_matrix_value(defaultShader, "transform", 1, trans2);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
 
