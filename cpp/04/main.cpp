@@ -121,8 +121,8 @@ int main() {
     return -1;
   }
   Shader defaultShader = Shader("shaders/vertex.vs", "shaders/fragment.fs");
-  // Shader positionBasedShader =
-  //     Shader("shaders/vertex.vs", "shaders/fragment_position.fs");
+  Shader positionBasedShader =
+      Shader("shaders/vertex.vs", "shaders/fragment_position.fs");
 
   float triangles[] = {0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
                        0.5f,  -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
@@ -130,10 +130,6 @@ int main() {
                        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f};
 
   unsigned int indices[] = {0, 1, 3, 1, 2, 3};
-
-  glm::mat4 trans = glm::mat4(1.0f);
-  trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-  trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 
   unsigned int vbo, vao, ebo;
   glGenVertexArrays(1, &vao);
@@ -167,17 +163,32 @@ int main() {
   defaultShader.use();
   defaultShader.setInt("texture1", 0);
   defaultShader.setInt("texture2", 1);
-  set_uniform_matrix_value(defaultShader, "transform", 1, trans);
 
   while (!glfwWindowShouldClose(window)) {
     process_Input(window);
     glClearColor(0.4f, 0.2f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    defaultShader.setFloat("blendAmount", blend_amount);
+    glm::mat4 trans1 = glm::mat4(1.0f);
+    trans1 = glm::translate(trans1, glm::vec3(0.5f, -0.5f, 0.0f));
+    trans1 =
+        glm::rotate(trans1, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    set_uniform_matrix_value(defaultShader, "transform", 1, trans1);
+
+    defaultShader.setFloat("blendAmount", std::sin(float(glfwGetTime())));
     woodTexture.activiate_and_bind(GL_TEXTURE0);
     transparentTexture.activiate_and_bind(GL_TEXTURE1);
     glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    glm::mat4 trans2 = glm::mat4(1.0f);
+    trans2 = glm::translate(trans2, glm::vec3(std::sin((float)glfwGetTime()), 0.5f, 0.0f));
+    trans2 =
+        glm::scale(trans2, glm::vec3(std::abs(std::sin((float)glfwGetTime())),
+                                     std::abs(std::sin((float)glfwGetTime())), 0.0f));
+    trans2 =
+        glm::rotate(trans2, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    set_uniform_matrix_value(defaultShader, "transform", 1, trans2);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
@@ -189,7 +200,7 @@ int main() {
   glDeleteVertexArrays(1, &vao);
   glDeleteBuffers(1, &vbo);
   defaultShader.remove();
-  // positionBasedShader.remove();
+  positionBasedShader.remove();
   glfwTerminate();
   return 0;
 }
