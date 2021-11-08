@@ -1,0 +1,1 @@
+start "" "%PROGRAMFILES%\Git\git-bash.exe" -c "emacs ~/.emacs.d/init.el"
