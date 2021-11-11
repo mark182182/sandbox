@@ -1,7 +1,7 @@
-;; evil-mode for vi(m) like behavior
-(add-to-list 'load-path "~/.emacs.d/evil")
-(require 'evil)
-(evil-mode 1)
+;; remove default decorations
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+(menu-bar-mode -1)
 
 ;; bootstrap for Straight package manager
 (defvar bootstrap-version)
@@ -17,22 +17,38 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; remove decorations
-(tool-bar-mode -1)
-(menu-bar-mode -1)
+;; evil-mode for vi(m) like behavior
+(straight-use-package 'evil)
+(evil-mode 1)
+
+;; flycheck
+(straight-use-package 'flycheck)
+(global-flycheck-mode 1)
+
+;;(flycheck-mode 1)
+
+;; use semantic mode by default
+(semantic-mode 1)
+(global-semantic-idle-scheduler-mode 1)
 
 ;; helm package for finding files
 (straight-use-package 'helm)
 (helm-mode 1)
 (setq completion-styles '(flex))
 
+;; clang-format on f9 from github.com/llvm-mirror/clang/blob/master/tools/clang-format/clang-format.el
+(load "~/.emacs.d/clang-format.el")
+(global-set-key [f9] 'clang-format-region)
+
 ;; setting font
 (set-frame-font "Consolas 14" nil t)
 
-;; atom-one-dark theme
+;; atom-one-dark theme from github.com/jonathanchu/atom-one-dark-theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/atom-one-dark-theme")
 (load-theme 'atom-one-dark t)
 
+;; invoke helm-find-files by pressing f8
+(global-set-key (kbd "<f8>") (lambda () (interactive) (helm-find-files -1)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
