@@ -25,8 +25,6 @@
 (straight-use-package 'flycheck)
 (global-flycheck-mode 1)
 
-;;(flycheck-mode 1)
-
 ;; use semantic mode by default
 (semantic-mode 1)
 (global-semantic-idle-scheduler-mode 1)
@@ -42,6 +40,14 @@
 
 ;; setting font
 (set-frame-font "Consolas 14" nil t)
+
+;; web-mode for JS
+(straight-use-package 'web-mode)
+(setq web-mode-script-padding 2)
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
 
 ;; atom-one-dark theme from github.com/jonathanchu/atom-one-dark-theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/atom-one-dark-theme")
