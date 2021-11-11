@@ -24,6 +24,14 @@
 ;; flycheck
 (straight-use-package 'flycheck)
 (global-flycheck-mode 1)
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+(defun checkers ()
+  (-when-let (checker (cond
+                       ((string= web-mode-content-type "js")
+                        'javascript-eslint)))
+    (flycheck-mode)
+    (flycheck-select-checker checker)))
+(add-hook 'web-mode-hook #'checkers)
 
 ;; use semantic mode by default
 (semantic-mode 1)
