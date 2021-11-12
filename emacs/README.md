@@ -14,3 +14,7 @@ grep RET -> run grep like so: grep -nH "window" *.h
 :v i s -> select current block
 :g v -> reselect previous selection
 :goto [line_num] -> jump to line by number
+
+Windows stuff:
+Windows+Ctrl+Arrow -> Move between virtual desktops
+Windows+Ctrl+D -> Create a new virtual desktop
