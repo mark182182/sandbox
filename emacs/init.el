@@ -24,14 +24,6 @@
 ;; flycheck
 (straight-use-package 'flycheck)
 (global-flycheck-mode 1)
-(flycheck-add-mode 'javascript-eslint 'web-mode)
-(defun checkers ()
-  (-when-let (checker (cond
-                       ((string= web-mode-content-type "js")
-                        'javascript-eslint)))
-    (flycheck-mode)
-    (flycheck-select-checker checker)))
-(add-hook 'web-mode-hook #'checkers)
 
 ;; use semantic mode by default
 (semantic-mode 1)
@@ -43,7 +35,9 @@
 (setq completion-styles '(flex))
 
 ;; clang-format on f9 from github.com/llvm-mirror/clang/blob/master/tools/clang-format/clang-format.el
+;; required .clang-format in the .emacs.d dir
 (load "~/.emacs.d/clang-format.el")
+(setq clang-format-style "file")
 (global-set-key [f9] 'clang-format-region)
 
 ;; setting font
