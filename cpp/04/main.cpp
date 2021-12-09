@@ -38,11 +38,13 @@ float pitch = -90.f;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
   glViewport(0, 0, width, height);
 }
 
-void init_and_set_window_hints() {
+void init_and_set_window_hints()
+{
   std::cout << "Starting " << WINDOW_NAME << "..." << std::endl;
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -50,8 +52,10 @@ void init_and_set_window_hints() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
-void mouse_callback(GLFWwindow *window, double xPos, double yPos) {
-  if (firstMouse) {
+void mouse_callback(GLFWwindow *window, double xPos, double yPos)
+{
+  if (firstMouse)
+  {
     lastX = xPos;
     lastY = yPos;
     firstMouse = false;
@@ -69,30 +73,37 @@ void mouse_callback(GLFWwindow *window, double xPos, double yPos) {
   yaw += xOffset;
   pitch += yOffset;
 
-  if (pitch > 89.0f) {
+  if (pitch > 89.0f)
+  {
     pitch = 89.0f;
   }
-  if (pitch < -89.0f) {
+  if (pitch < -89.0f)
+  {
     pitch = -89.0f;
   }
 };
 
-void scroll_callback(GLFWwindow *window, double xOffset, double yOffset) {
+void scroll_callback(GLFWwindow *window, double xOffset, double yOffset)
+{
   std::cout << fov_amount << std::endl;
   fov_amount -= (float)yOffset;
-  if (fov_amount < 1.0f) {
+  if (fov_amount < 1.0f)
+  {
     fov_amount = 1.0f;
   }
-  if (fov_amount > 90.0f) {
+  if (fov_amount > 90.0f)
+  {
     fov_amount = 90.0f;
   }
   std::cout << fov_amount << std::endl;
 }
 
-int create_window_and_init_libs() {
+int create_window_and_init_libs()
+{
   window =
       glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, NULL, NULL);
-  if (window == NULL) {
+  if (window == NULL)
+  {
     std::cerr << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
     return -1;
@@ -103,7 +114,8 @@ int create_window_and_init_libs() {
   glfwSetScrollCallback(window, scroll_callback);
 
   glfwMakeContextCurrent(window);
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+  {
     std::cerr << "Failed to init GLAD" << std::endl;
     return -1;
   }
@@ -112,7 +124,8 @@ int create_window_and_init_libs() {
   return 1;
 }
 
-void process_Input(GLFWwindow *window) {
+void process_Input(GLFWwindow *window)
+{
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
@@ -121,62 +134,77 @@ void process_Input(GLFWwindow *window) {
   int up_arrow_press = glfwGetKey(window, GLFW_KEY_UP);
   int down_arrow_press = glfwGetKey(window, GLFW_KEY_DOWN);
 
-  if (tab_press == GLFW_PRESS && tab_pressed != true) {
+  if (tab_press == GLFW_PRESS && tab_pressed != true)
+  {
     tab_pressed = true;
     wireframe_mode = !wireframe_mode;
-    if (wireframe_mode) {
+    if (wireframe_mode)
+    {
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    } else {
+    }
+    else
+    {
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
   }
-  if (tab_press == GLFW_RELEASE) {
+  if (tab_press == GLFW_RELEASE)
+  {
     tab_pressed = false;
   }
 
-  if (up_arrow_press == GLFW_RELEASE) {
+  if (up_arrow_press == GLFW_RELEASE)
+  {
     up_pressed = false;
   }
-  if (down_arrow_press == GLFW_RELEASE) {
+  if (down_arrow_press == GLFW_RELEASE)
+  {
     down_pressed = false;
   }
 
   int z_press = glfwGetKey(window, GLFW_KEY_Z);
-  if (z_press == GLFW_PRESS && z_pressed != true) {
+  if (z_press == GLFW_PRESS && z_pressed != true)
+  {
     fov_amount = 30.0f;
   }
 
-  if (z_press == GLFW_RELEASE) {
+  if (z_press == GLFW_RELEASE)
+  {
     z_pressed = false;
     fov_amount = prev_fov_amount;
   }
 
   float speedMultiplier = 1.0f;
 
-  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+  {
     speedMultiplier = 3.0f;
   }
 
   const float cameraSpeed = 3.2f * deltaTime * speedMultiplier;
 
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+  {
     cameraPos += cameraSpeed * cameraFront;
   }
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+  {
     cameraPos -= cameraSpeed * cameraFront;
   }
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+  {
     cameraPos -=
         glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
   }
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+  {
     cameraPos +=
         glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
   }
 }
 
 void bind_buffers(float vertices[], int vertices_size, unsigned int VBO,
-                  unsigned int VAO) {
+                  unsigned int VAO)
+{
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
@@ -190,16 +218,19 @@ void bind_buffers(float vertices[], int vertices_size, unsigned int VBO,
 }
 
 void set_uniform_matrix_value(Shader shader, const char *uniformVarName,
-                              int num_of_matrices, glm::mat4 transform) {
+                              int num_of_matrices, glm::mat4 transform)
+{
   int uniformLocation = glGetUniformLocation(shader.ID, uniformVarName);
   glUniformMatrix4fv(uniformLocation, num_of_matrices, GL_FALSE,
                      glm::value_ptr(transform));
 }
 
-int main() {
+int main()
+{
   init_and_set_window_hints();
   int isInitSuccessful = create_window_and_init_libs();
-  if (!isInitSuccessful) {
+  if (!isInitSuccessful)
+  {
     return -1;
   }
   Shader defaultShader = Shader("shaders/vertex.vs", "shaders/fragment.fs");
@@ -207,31 +238,31 @@ int main() {
       Shader("shaders/vertex.vs", "shaders/fragment_position.fs");
 
   float triangles[] = {
-      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 0.0f,
-      0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
-      -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
 
-      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
-      0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-      -0.5f, 0.5f,  0.5f,  0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
 
-      -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
       -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  0.5f,  1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
-      0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
-      0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
-      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
 
-      -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
-      0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-      -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, -0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
 
-  unsigned int indices[] = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11,
+  unsigned int indices[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
                             12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
                             24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
 
@@ -297,7 +328,8 @@ int main() {
 
   glm::mat4 projection;
 
-  while (!glfwWindowShouldClose(window)) {
+  while (!glfwWindowShouldClose(window))
+  {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
@@ -324,8 +356,9 @@ int main() {
     set_uniform_matrix_value(defaultShader, "view", 1, view);
     set_uniform_matrix_value(defaultShader, "projection", 1, projection);
 
-    float timeBasedValue =
-        std::sin(float(glfwGetTime())) * ((std::rand() % 2 + 1) - 1);
+    float timeBasedValue = std::sin(float(glfwGetTime())) * ((std::rand() % 200 + 1) - 1);
+
+    cameraPos.x = timeBasedValue;
 
     model = glm::rotate(model, timeBasedValue * glm::radians(timeBasedValue),
                         glm::vec3(0.5f, 1.0f, 0.0f));
@@ -340,7 +373,8 @@ int main() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
     // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-    for (size_t i = 0; i < 10; i++) {
+    for (size_t i = 0; i < 10; i++)
+    {
       glm::mat4 model = glm::mat4(1.0f);
       glm::vec3 current = manyCubePositions[i];
       current.x += i;

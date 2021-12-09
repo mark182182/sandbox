@@ -1,6 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "file_utils.h"
 #include <fstream>
 #include <glad/glad.h>
 #include <iostream>
@@ -36,23 +37,6 @@ public:
   };
 
 private:
-  std::string read_file(const char *filename) {
-    std::ifstream file(filename, std::ifstream::in);
-    std::string output;
-
-    if (file.good() && file.is_open()) {
-      while (file) {
-        char current_char = file.get();
-        output.push_back(current_char);
-      }
-      file.close();
-      return output;
-    } else {
-      std::cerr << "Error reading file: " + std::string(filename) << std::endl;
-      return NULL;
-    }
-  };
-
   void check_shader_compile_status(unsigned int vertexShader, int type) {
     int success;
     char infoLog[512];
