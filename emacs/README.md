@@ -13,3 +13,4 @@ Custom Emacs (evil-mode) stuff:
 - :v i s -> select current block
 - :g v -> reselect previous selection
 - :M-g g -> jump to line by number
+- :Altgr ; -> toggle comment block
