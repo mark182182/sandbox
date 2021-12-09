@@ -12,8 +12,4 @@ Custom Emacs (evil-mode) stuff:
 - :C-w w -> switch tabs
 - :v i s -> select current block
 - :g v -> reselect previous selection
-- :goto [line_num] -> jump to line by number
-
-Windows stuff:
-- Windows+Ctrl+Arrow -> Move between virtual desktops
-- Windows+Ctrl+D -> Create a new virtual desktop
+- :M-g g -> jump to line by number

@@ -17,3 +17,7 @@ for (const i in rows) {
   }
 }
 ```
+
+## Windows stuff:
+- Windows+Ctrl+Arrow -> Move between virtual desktops
+- Windows+Ctrl+D -> Create a new virtual desktop
