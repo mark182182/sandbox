@@ -32,9 +32,8 @@ fi
 invoke_clang() {
   echo "Compiling $FILENAME..."
   output_file="$COMPILED_NAME.exe"
-  echo $FILENAME
   if [[ $FILENAME == *.cpp* ]]; then
-    clang++ -l$LIBS -pedantic-errors $4 -Wall -Weffc++ -Wextra -Wsign-conversion -Werror -std=c++17 --output=./$output_file $FILENAME 
+    clang++ -l$LIBS -pedantic-errors $4 -Wall -Wpedantic -Weffc++ -Wextra -Wsign-conversion -Werror -std=c++17 --output=./$output_file $FILENAME 
   else
     clang -l$LIBS -pedantic-errors $4 -Wall -Wextra -Wconversion -Werror -std=c89 --output=./$output_file $FILENAME
   fi
