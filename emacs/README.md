@@ -7,6 +7,7 @@ Custom Emacs (evil-mode) stuff:
 - :C-x h -> select all lines
 - grep RET -> run grep like so: grep -nH "window" *.h
 - <f8> -> search for files
+- <f8> navigate to the file and press alt+shift+r -> rename selected file
 - <f9> -> clang format
 - :vsplit -> create vertical tab
 - :C-w w -> switch tabs

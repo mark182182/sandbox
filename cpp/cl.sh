@@ -35,7 +35,7 @@ invoke_clang() {
   if [[ $FILENAME == *.cpp* ]]; then
     clang++ -l$LIBS -pedantic-errors $4 -Wall -Wpedantic -Weffc++ -Wextra -Wsign-conversion -Werror -std=c++17 --output=./$output_file $FILENAME 
   else
-    clang -l$LIBS -pedantic-errors $4 -Wall -Wextra -Wconversion -Werror -std=c89 --output=./$output_file $FILENAME
+    clang $4 -Wall -Wextra -Wconversion -Werror -std=c89 --output=./$output_file $FILENAME
   fi
   echo "Executing $output_file..."
   ./${output_file}
