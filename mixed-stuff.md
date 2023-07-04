@@ -33,3 +33,6 @@ ffmpeg -i video.avi -pix_fmt rgb24 -loop_output 0 out.gi
 ## Windows stuff:
 - Windows+Ctrl+Arrow -> Move between virtual desktops
 - Windows+Ctrl+D -> Create a new virtual desktop
+
+## Unix stuff:
+- Create a symlink: ``` shell ln -s [to] [from] ```
