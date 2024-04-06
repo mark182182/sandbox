@@ -10,7 +10,7 @@ for (const i in rows) {
     const currRow = innerRows[innerRows.length - 2];
     if (currRow.innerHTML.includes("button")) {
       const button = currRow.querySelector("button");
-      if (button.outerHTML.includes("add-button") && button.outerHTML.includes('aria-checked="false"')) {
+      if (button.outerHTML.includes("Add to Liked Songs") && button.outerHTML.includes('aria-checked="false"')) {
         button.click();
       }
     }
