@@ -23,24 +23,37 @@ def main():
     )  # gives an overall information on the data (mean, std, min etc.)
     print(dftrain.shape)  # the shape of the tensor
 
-    plt.figure()  # Create a new figure
-    dftrain.age.hist(bins=20)  # Plot the histogram
-    plt.savefig("age_histogram.png")  # Save the figure to a PNG file
+    CATEGORICAL_COLUMNS = [
+        "sex",
+        "n_siblings_spouses",
+        "parch",
+        "class",
+        "deck",
+        "embark_town",
+        "alone",
+    ]
 
-    plt.figure()
-    dftrain.sex.value_counts().plot(kind="barh")
-    plt.savefig("sex_distribution.png")
+    NUMERIC_COLUMNS = ["age", "fare"]
 
-    plt.figure()
-    dftrain["class"].value_counts().plot(kind="barh")
-    plt.savefig("class_distribution.png")
+    feature_columns = []
+    for feature_name in CATEGORICAL_COLUMNS:
+        vocabulary = dftrain[
+            feature_name
+        ].unique()  # gets a lsit of all unique values from given feature column
+        feature_columns.append(
+            tf.feature_column.categorical_column_with_vocabulary_list(
+                feature_name, vocabulary
+            )
+        )
 
-    # Create a diagram on the survival ratio based on the given sex
-    plt.figure()  # Create a new figure
-    pd.concat([dftrain, y_train], axis=1).groupby("sex").survived.mean().plot(
-        kind="barh"
-    ).set_xlabel("% survive")
-    plt.savefig("survival_ratio_by_sex.png")
+    for feature_name in NUMERIC_COLUMNS:
+        feature_columns.append(
+            tf.feature_column.numeric_column(feature_name, dtype=tf.float32)
+        )
+
+    print(dftrain["embark_town"].unique())
+    print()
+    print(feature_columns)
 
 
 if __name__ == "__main__":
