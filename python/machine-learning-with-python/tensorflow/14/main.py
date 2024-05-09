@@ -43,8 +43,8 @@ def main():
     plt.imshow(train_images[1])
     plt.colorbar()
     plt.grid(False)
-    # plt.show() # show the image instead of saving
-    plt.savefig("image.png")
+    plt.show() # show the image instead of saving
+    # plt.savefig("image.png")
 
     # preprocessing the data, which means prior transformations to our data before feeding it the model
     train_images = train_images = 255.0
