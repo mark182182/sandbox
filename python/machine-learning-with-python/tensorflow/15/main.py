@@ -79,18 +79,48 @@ def main():
     test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=1)
     print('Test accuracy:', test_acc)
     
-    predictions = model.predict(test_images)
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    
+    # The example image (CC0 rights) contains inverted colors, as the images that were used to trian model contains black backgrounds 
+    imgToPredict=load_image_into_numpy_array(f"{script_directory}/shirt28x28.png")
+    # Shape should be (28,28) as we have 28x28 size and no color channels
+    print(imgToPredict.shape)
+    
+    print(imgToPredict)
+    # We have to flatten our image to fit the model
+    flattenedImgToPredict = imgToPredict.reshape(-1, 28, 28)
+    print(flattenedImgToPredict)
+    
+    # We need values between 0 and 1
+    transformedImgToPredict=flattenedImgToPredict / 255.0
+    predictions = model.predict(transformedImgToPredict)
     # The probability distribution of the output layer of the first image
     print(predictions[0])
     
-    # check the class for the prediction
-    print("Prediction: " + class_names[np.argmax(predictions[2])])
+    # check the class for the prediction, it should be a shirt
+    print("Prediction: " + class_names[np.argmax(predictions[0])])
     plt.figure()
-    plt.imshow(test_images[2])
+    plt.imshow(imgToPredict)
     plt.colorbar()
     plt.grid(False)
     plt.show()
-
+    
+def load_image_into_numpy_array(imgPath: str):
+    import PIL
+    from PIL import Image, ImageOps
+    from numpy import asarray
+    print('Pillow Version:', PIL.__version__)
+    
+    # This loads our (28,28,4) image, 28x28 size and 4 color channels
+    image = Image.open(imgPath)
+    # summarize some details about the image
+    # print(image.format)
+    # print(image.size)
+    # print(image.mode)
+    
+    # We need a grayscale image, because our model was trained on them, and our example has 4 color channels
+    image = ImageOps.grayscale(image)
+    return asarray(image)
 
 if __name__ == "__main__":
     main()

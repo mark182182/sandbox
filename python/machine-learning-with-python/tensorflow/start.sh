@@ -12,7 +12,7 @@ conda activate tfVenv
 statusCode=$?
 
 if [[ $statusCode != 0 ]]; then
-  conda create -n tfVenv python=3.9 anaconda::tensorflow tensorflow-probability anaconda::pillow pandas matplotlib numpy --yes
+  conda create -n tfVenv python=3.9 anaconda::tensorflow tensorflow-probability conda-forge::tensorflow-datasets==4.2.0 anaconda::pillow pandas matplotlib numpy --yes
 
   statusCode=$?
 
