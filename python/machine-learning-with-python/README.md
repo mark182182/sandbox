@@ -16,5 +16,5 @@ Requires conda to be installed on your machine an accessible from the shell.
 
 How to run a script in one of the folders:
 ```shell
-Usage: start.sh [pathToScript]
+Usage (elevated terminal): start.sh [pathToScript]
 ```
