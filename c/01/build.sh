@@ -59,7 +59,7 @@ else
     exit 1
 fi
 
-# Run tests (excluding scratch)
+# Run tests (excluding standalone)
 echo "Running tests..."
 cd build
 ctest --output-on-failure

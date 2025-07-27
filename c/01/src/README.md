@@ -8,6 +8,8 @@ This project is a thesis work for rendering 2D/3D cellular automata in C.
 - All functions are in Pascal Case, e.g. `LoadFonts` or Pascal Snake Case, e.g. `Render_Window`, `Menu_Init`, `Generator_NextGeneration`, when they belong to a given struct. Except those that are only used internally in each module, which are prefixed with `__`, e.g. `__CheckNeighbours`.
 - Instead of using namespaces like in C++, or creating a struct and storing function pointers in it, it's advised to just use a prefix before the name of the function. Instead of `arenaAllocator.init()` we would have `Arena_Init()` (Pascal Snake Case), which is much less code and easier.
 - Enums are prefixed with the module name, e.g. `RenderMode`, `FontType`, and use full upper snake case for the enum values, e.g. `RENDER_MODE_2D`, `FONT_TYPE_FIRA_CODE_RETINA`.
+- Enums are used when multiple values need to be represented, such as render modes or font types. They are defined in the header files of the respective modules.
+- Static const for any compile-time constants that are not integers or evaluated from expressions at compile-time, since these cannot be enums. These are defined in the header files as well.
 
 # Testing
 
