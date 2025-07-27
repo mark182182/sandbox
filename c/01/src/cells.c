@@ -7,6 +7,23 @@
 #include <stdio.h>
 #include <immintrin.h>
 
+/*
+ * Diagonals relative to the current cell, e.g. if the ratio is 10:
+ * top-left  bottom-left bottom-right    top-right
+ * -72 - 1   -72 + 1     +72 - 1         +72 + 1
+ */
+const int DIAGONAL_INDEXES[] = {(-1 * CELL_HEIGHT_SIZE) - 1,
+                                (-1 * CELL_HEIGHT_SIZE) + 1,
+                                CELL_HEIGHT_SIZE - 1, CELL_HEIGHT_SIZE + 1};
+
+/*
+ * Adjecent relative idx to the current cell, e.g. if the ratio is 10:
+ * top   bottom  left    right
+ * -1    +1      -72     +72
+ */
+const int ADJECENT_INDEXES[] = {-1, +1, (-1 * CELL_HEIGHT_SIZE),
+                                CELL_HEIGHT_SIZE};
+
 // TODO: Use arena allocator instead and rewrite the previous C++ code
 // void Cells2D_InitArraysBasedOnCellSize(Cells2D *cd) {
 //   Cell *cells = (Cell *)_mm_malloc(CELL_COUNT * sizeof(Cell),

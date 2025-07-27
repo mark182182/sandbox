@@ -1,5 +1,6 @@
 #include "const.h"
 
-// Default to this, if we can't load something from the config file
-// This should be used until the implementation to load the config file is
-// implemented
+const Color RANDOM_COLORS[24] = {
+    LIGHTGRAY, GRAY,   DARKGRAY, YELLOW,     GOLD,      ORANGE,  PINK,
+    RED,       MAROON, GREEN,    LIME,       DARKGREEN, SKYBLUE, BLUE,
+    DARKBLUE,  PURPLE, VIOLET,   DARKPURPLE, BEIGE,     BROWN,   DARKBROWN};

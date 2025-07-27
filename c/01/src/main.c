@@ -1,13 +1,13 @@
-﻿#define _CRTDBG_MAP_ALLOC
-
-#include "render.h"
-#include <crtdbg.h>
+﻿#include "render.h"
 
 int main() {
-  _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+  Render render = {
+      .currentMode = RENDER_MODE_INIT,
+      .frameArena = 0,
+      .modeArena = NULL,
+  };
+  Render *a = NULL;
 
-  // Renderer::render();
-  char *leak = malloc(256);
-
+  Render_Window(&render);
   return 0;
 }

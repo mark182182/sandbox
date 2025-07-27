@@ -1,0 +1,20 @@
+{
+  "configurations": [
+    {
+      "name": "Clang",
+      "includePath": ["${workspaceFolder}/**"],
+      "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
+      "windowsSdkVersion": "10.0.26100.0",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "windows-clang-x64",
+      "compilerArgs": [
+        // Does not do anything in case of VSCode, because we need to compile the actual code itself to get these warnings
+        "-Weverything",
+        "-Wno-missing-prototypes",
+        "-Wno-strict-prototypes"
+      ]
+    }
+  ],
+  "version": 4
+}

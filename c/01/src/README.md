@@ -16,3 +16,4 @@ This project is a thesis work for rendering 2D/3D cellular automata in C.
   - `integration/` - contains integration tests that run the internal parts of the renderer, such as the menu, and asserts that they work correctly in conjunction with the renderer
   - `e2e/` - few end-to-end tests that run the renderer with preconfigured settings and asserts via screenshot comparison
   - `scratch/` - a place for experiments and temporary tests that don't fit into the other categories; example: `ray.c` for testing different raylib related features
+  - `standalone/` - contains tests that can be run independently of the main renderer, useful for testing specific features or functionalities without the full context of the renderer; example: `basics.c` for testing basic C features. These are intentionally not run as CMake tests.

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+source "$(dirname "$0")/common.sh"
+
 if ! command -v clang &> /dev/null; then
     echo "Error: clang compiler not found"
     exit 1
@@ -30,6 +32,12 @@ if [[ "$*" == *"-v"* ]]; then
     verbose_mode="--verbose"
 fi
 
+dump_mode=""
+if [[ "$*" == *"--dump"* ]]; then
+    echo "AST dump mode enabled."
+    dump_mode="--dump"
+fi
+
 mkdir -p build
 
 cmake -S . -B build \
@@ -38,6 +46,8 @@ cmake -S . -B build \
     -DCMAKE_C_COMPILER="clang" \
     -DCMAKE_MAKE_PROGRAM="make" \
     -DCLANG_VERBOSE="$verbose_mode" \
+    -DCLANG_DUMP_AST="$dump_mode" \
+    -DCOMMON_FLAGS="$COMMON_FLAGS"
 
 # build the project
 cmake --build build $verbose_mode

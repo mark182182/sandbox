@@ -4,33 +4,25 @@
 #include "const.h"
 #include "stdint.h"
 
-// TODO: These should come from a config file
-const int CELL_HEIGHT_RATIO = 1 << 3; // power of two is recommended
-const int CELL_WIDTH_RATIO = 1 << 3;  // power of two is recommended
-const int INITIAL_FREQUENCY = 5;
-
-const int CELL_HEIGHT_SIZE = DEFAULT_CONST.SCREEN_HEIGHT / CELL_HEIGHT_RATIO;
-const int CELL_WIDTH_SIZE = DEFAULT_CONST.SCREEN_WIDTH / CELL_WIDTH_RATIO;
+static const int CELL_HEIGHT_RATIO = 1 << 3; // power of two is recommended
+static const int CELL_WIDTH_RATIO = 1 << 3;  // power of two is recommended
+static const int CELL_INITIAL_FREQUENCY = 5;
+static const int CELL_HEIGHT_SIZE = SCREEN_HEIGHT / CELL_HEIGHT_RATIO;
+static const int CELL_WIDTH_SIZE = SCREEN_WIDTH / CELL_WIDTH_RATIO;
 const int CELL_COUNT = CELL_HEIGHT_SIZE * CELL_WIDTH_SIZE;
 
-const uint8_t CELL_INDEX_SIZE = 4;
+extern const int CELL_HEIGHT_RATIO;
+extern const int CELL_WIDTH_RATIO;
+extern const int INITIAL_FREQUENCY;
 
-/*
- * Diagonals relative to the current cell, e.g. if the ratio is 10:
- * top-left  bottom-left bottom-right    top-right
- * -72 - 1   -72 + 1     +72 - 1         +72 + 1
- */
+extern const int CELL_HEIGHT_SIZE;
+extern const int CELL_WIDTH_SIZE;
+extern const int CELL_COUNT;
 
-const int DIAGONAL_INDEXES[CELL_INDEX_SIZE] = {
-    (-1 * CELL_HEIGHT_SIZE) - 1, (-1 * CELL_HEIGHT_SIZE) + 1,
-    CELL_HEIGHT_SIZE - 1, CELL_HEIGHT_SIZE + 1};
-/*
- * Adjecent relative idx to the current cell, e.g. if the ratio is 10:
- * top   bottom  left    right
- * -1    +1      -72     +72
- */
-const int ADJECENT_INDEXES[CELL_INDEX_SIZE] = {-1, +1, (-1 * CELL_HEIGHT_SIZE),
-                                               CELL_HEIGHT_SIZE};
+extern const uint8_t CELL_INDEX_SIZE;
+
+extern const int DIAGONAL_INDEXES[];
+extern const int ADJECENT_INDEXES[];
 
 typedef struct Cell {
   bool is_alive; // populated or unpopulated

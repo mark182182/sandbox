@@ -2,20 +2,23 @@
 #define CONST_H
 
 #include <raylib.h>
+#include "arena.h"
 
-typedef struct Const {
-  // TODO: These should come from a config file
-  const int SCREEN_WIDTH;
-  const int SCREEN_HEIGHT;
-  const Color RANDOM_COLORS[24];
-} Const;
+// the lifetime of this arena is the lifetime of the renderer/application
+Arena *permanentArena;
 
-const Const DEFAULT_CONST = {
-    .SCREEN_WIDTH = 1280,
-    .SCREEN_HEIGHT = 720,
-    .RANDOM_COLORS = {LIGHTGRAY, GRAY,  DARKGRAY, YELLOW, GOLD,   ORANGE,
-                      PINK,      RED,   MAROON,   GREEN,  LIME,   DARKGREEN,
-                      SKYBLUE,   BLUE,  DARKBLUE, PURPLE, VIOLET, DARKPURPLE,
-                      BEIGE,     BROWN, DARKBROWN}};
+/*
+TODO: If the below values should come from a configuration, a temporary arena
+would need to be used an cleared whenever the configuration is reloaded. This
+means that any downstream usage, e.g. window initialization would need to be
+re-run as well.
+*/
+
+typedef enum RenderConst {
+  SCREEN_WIDTH = 1024,
+  SCREEN_HEIGHT = 720,
+} RenderConst;
+
+extern const Color RANDOM_COLORS[24];
 
 #endif

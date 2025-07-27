@@ -23,4 +23,5 @@ void can_switch_windows_in_different_modes() {
 int main() {
   can_switch_windows_in_different_modes();
   // TODO: add more calls, as needed
+  return 0;
 }

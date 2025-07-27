@@ -55,7 +55,11 @@
     "ostream": "c",
     "stop_token": "c",
     "typeinfo": "c",
-    "xlocnum": "c"
+    "xlocnum": "c",
+    "stdio.h": "c",
+    "str.h": "c",
+    "crtdbg.h": "c",
+    "render.h": "c"
   },
   // Disable GitHub Copilot for C files
   "github.copilot.enable": {

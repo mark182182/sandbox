@@ -9,18 +9,25 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
  
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Debug build should not optimize and should include debug symbols
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls -Wno-declaration-after-statement")
+# Release build should optimize and not include debug symbols, disable asserts
+set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
+
 # Set compiler flags for the project
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything -Wno-c98-compat -mavx2")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything -Wno-missing-prototypes -Wno-strict-prototypes -mavx2")
+
+# Conditionally dump AST if requested
+if (CLANG_DUMP_AST)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Xclang -ast-dump -Xclang -ast-dump-filter=ca_renderer -o ${CMAKE_BINARY_DIR}/ca_renderer.ast")
+    message(STATUS "AST dump will be generated at ${CMAKE_BINARY_DIR}/ca_renderer.ast")
+else()
+endif()
 
 # Conditionally set flags based on what is passed to CMake
 if (CLANG_VERBOSE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -v")
 endif()
-
-# Debug build should not optimize and should include debug symbols
-set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
-# Release build should optimize and not include debug symbols, disable asserts
-set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
 
 # Print the compiler flags for debugging purposes
 message(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
