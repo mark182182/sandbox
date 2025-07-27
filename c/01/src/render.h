@@ -9,7 +9,7 @@ typedef enum RenderMode {
   MAX_RENDER_MODE
 } RenderMode;
 
-typedef struct Renderer {
+typedef struct Render {
 
   // the lifetime of this arena is the lifetime of the renderer/application
   Arena *permanentArena;
@@ -20,8 +20,9 @@ typedef struct Renderer {
 
   RenderMode currentMode;
 
-} Renderer;
+} Render;
 
-void Renderer_Render(Renderer *renderer);
+void Render_Window(Render *renderer);
+void Render_TeardownAfterWindow(Render *renderer);
 
 #endif

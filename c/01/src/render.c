@@ -1,4 +1,4 @@
-#include "renderer.h"
+#include "render.h"
 #include "font.h"
 #include "gen_gol2d.h"
 
@@ -10,7 +10,8 @@
 #include "const.h"
 #include "menu.h"
 
-void Renderer_Render(Renderer *renderer) {
+/* TODO: Rewrite this in C
+void Render_Window(Render *renderer) {
   InitWindow(DEFAULT_CONST.SCREEN_WIDTH, DEFAULT_CONST.SCREEN_HEIGHT,
              "Graphics example");
 
@@ -29,7 +30,7 @@ void Renderer_Render(Renderer *renderer) {
   Gol2dCells2D cd = Gol2dCells2D();
 
   Gol2dGeneratorInitArraysBasedOnCellSize(&cd);
-  Gol2d_Generator_initializeCells(&cd);
+  GeneratorGOL2D_InitializeCells(&cd);
 
   // Arena allocator should be used instead
   // std::unique_ptr<Gol2dCells2D> previousCd = nullptr;
@@ -61,7 +62,7 @@ void Renderer_Render(Renderer *renderer) {
     BeginDrawing();
 
     if (pressed == 'r') {
-      Gol2dGeneratorInitializeCells(&cd);
+      GeneratorGOL2D_InitializeCells(&cd);
     }
 
     if (pressed == 'p') {
@@ -83,32 +84,29 @@ void Renderer_Render(Renderer *renderer) {
 
       // TODO: instead of doing this, a new arena allocator should be used when
       // the new cells are generated
-      previousCd =
-          stdunique_ptr<Gol2dCells2D>(Gol2dGeneratordeepCopyCells(&cd));
-      Gol2dGeneratornextGeneration(&cd, previousCd.get());
+      // previousCd =
+      //     stdunique_ptr<Gol2dCells2D>(Gol2dGeneratordeepCopyCells(&cd));
+      // Gol2dGeneratornextGeneration(&cd, previousCd.get());
       deltaTime = 0;
     }
     deltaTime += GetFrameTime();
 
-    for (int i = 0; i < Gol2dCELL_COUNT; i++) {
+    for (int i = 0; i < CELL_COUNT; i++) {
       if (cd.cells[i].is_alive) {
-        DrawRectangle(cd.positionsX[i], cd.positionsY[i],
-                      Gol2dCELL_HEIGHT_RATIO, Gol2dCELL_WIDTH_RATIO,
-                      *cd.colors[i]);
+        DrawRectangle(cd.positionsX[i], cd.positionsY[i], CELL_HEIGHT_RATIO,
+                      CELL_WIDTH_RATIO, *cd.colors[i]);
       }
     }
 
-    menu.draw();
+    Menu_Draw();
     EndDrawing();
 
     // free objects after each frame
-    renderer->frameArena->deallocate();
+    // TODO: fix this once arena allocator is implemented
+    // renderer->frameArena->deallocate();
   }
 
-  // teardown the objects after the
+  // teardown the objects after the window has been closed
+  Cells2D_FreeArrays(&cd);
 }
-
-/*
-Teardown the objects after the window has been closed.
 */
-void RendererTeardownAfter() { Gol2dGenerator Gol2dGeneratorfreeArrays(&cd); }

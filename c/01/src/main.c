@@ -1,6 +1,6 @@
 ﻿#define _CRTDBG_MAP_ALLOC
 
-// #include "renderer.h"
+#include "render.h"
 #include <crtdbg.h>
 
 int main() {

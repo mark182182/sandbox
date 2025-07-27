@@ -5,6 +5,8 @@
 #include "font.h"
 #include <time.h>
 
+// TODO: Rewrite this in C
+/*
 void drawTextInMenu(Vector2 firstTextPos, Vector2 *currentTextPos,
                     const char *textToDraw, int fontSize, Color rectColor,
                     Color textColor, void(*onCollision(void))) {
@@ -60,7 +62,4 @@ void draw() {
   drawTextInMenu(firstTextPos, &currentTextPos, quitText.c_str(), fontSize,
                  BLACK, RED, []() {});
 }
-
-Menu menu = {
-
-}
+*/

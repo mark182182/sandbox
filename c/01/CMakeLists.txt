@@ -9,10 +9,28 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
  
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set compiler flags
+# Set compiler flags for the project
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything -Wno-c98-compat -mavx2")
 
-# Add flags specifically to the target, excluding e.g. raylib warnings
+# Conditionally set flags based on what is passed to CMake
+if (CLANG_VERBOSE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -v")
+endif()
+
+# Debug build should not optimize and should include debug symbols
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
+# Release build should optimize and not include debug symbols, disable asserts
+set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
+
+# Print the compiler flags for debugging purposes
+message(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
+message(STATUS "CMAKE_C_FLAGS_DEBUG: ${CMAKE_C_FLAGS_DEBUG}")
+message(STATUS "CMAKE_C_FLAGS_RELEASE: ${CMAKE_C_FLAGS_RELEASE}")
+message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+
+# Print the actual compiler flags that will be used
+
+# Add common flags specifically to the target, excluding e.g. raylib warnings
 add_compile_options(
     -Wno-everything
     $<$<COMPILE_LANGUAGE:C>:-Wno-reserved-id-macro>
@@ -22,8 +40,19 @@ add_compile_options(
 
 project("ca_renderer")
 
+# Add any test directories
+
+enable_testing()
+add_subdirectory(tests/scratch)
+add_subdirectory(tests/unit)
+add_subdirectory(tests/integration)
+add_subdirectory(tests/benchmark)
+add_subdirectory(tests/e2e)
+
 # Add source to this project's executable.
-add_executable (ca_renderer "main.c" "${CMAKE_SOURCE_DIR}/resources" "const.c"  "str.c" "gen_gol2d.c" "font.c" "renderer.c" "hash.c" "menu.c" "cells.c")
+file(GLOB RENDERER_SRC "src/*.c")
+add_executable(ca_renderer "${CMAKE_SOURCE_DIR}/resources" ${RENDERER_SRC})
+target_include_directories(ca_renderer PRIVATE src)
 
 # Raylib
 set(RAYLIB_VERSION 5.5)
