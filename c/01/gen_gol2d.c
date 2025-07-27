@@ -1,0 +1,72 @@
+#include "gen_gol2d.h"
+#include "const.h"
+#include "cells.h"
+#include <raylib.h>
+#include <stdlib.h>
+#include <GLFW/glfw3.h>
+#include <stdio.h>
+#include <immintrin.h>
+
+void GeneratorGOL2D_InitializeCells(Cells2D *cd) {
+  int i = 0;
+  for (int posX = 0; posX < DEFAULT_CONST.SCREEN_WIDTH;
+       posX += CELL_WIDTH_RATIO) {
+    for (int posY = 0; posY < DEFAULT_CONST.SCREEN_HEIGHT;
+         posY += CELL_HEIGHT_RATIO) {
+      bool is_alive = rand() % INITIAL_FREQUENCY == 0;
+      (&cd->cells[i])->is_alive = is_alive;
+      cd->positionsX[i] = posX;
+      cd->positionsY[i] = posY;
+      cd->colors[i] = &DEFAULT_CONST.RANDOM_COLORS[rand() % 2];
+      i++;
+    }
+  }
+}
+
+// TODO: use a compute shader instead (since OpenGL 4.3)
+void GeneratorGOL2D_NextGeneration(Cells2D *cd, Cells2D *previousCd) {
+
+  for (int i = 0; i < CELL_COUNT; i++) {
+    int neighbours = __CheckNeighbours(previousCd, i);
+    // under or overpopulation
+    if (neighbours < 2 || neighbours > 3) {
+      (&cd->cells[i])->is_alive = false;
+      // reproduction
+    } else if (!(&cd->cells[i])->is_alive && neighbours == 3) {
+      (&cd->cells[i])->is_alive = true;
+    }
+  }
+  freeArrays(previousCd);
+}
+
+/*
+ * Counts the neighbours for the given cell.
+ * Every cell interacts with its eight neighbours, which are the cells that
+ * are horizontally, vertically, or diagonally adjacent.
+ *
+ * @return int: the number of neighbours
+ */
+int __CheckNeighbours(Cells2D *previousCd, int i) {
+  int neighbours = 0;
+  int arraySize = (CELL_COUNT - 1);
+
+  for (int j = 0; j < CELL_INDEX_SIZE; j++) {
+    int relativeIdx = i + DIAGONAL_INDEXES[j];
+    if (relativeIdx >= 0 && relativeIdx <= arraySize &&
+        (&previousCd->cells[relativeIdx])->is_alive) {
+      // the relative diagonal cell
+      neighbours++;
+    }
+  }
+
+  for (int j = 0; j < CELL_INDEX_SIZE; j++) {
+    int relativeIdx = i + ADJECENT_INDEXES[j];
+    if (relativeIdx >= 0 && relativeIdx <= arraySize &&
+        (&previousCd->cells[relativeIdx])->is_alive) {
+      // the adjecent diagonal cell
+      neighbours++;
+    }
+  }
+
+  return neighbours;
+}

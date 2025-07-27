@@ -4,10 +4,10 @@
 #include <bullet/btBulletDynamicsCommon.h>
 #include <fstream>
 #include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/vec3.hpp>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/glm.hpp"
 #include <iostream>
 #include <stb_image.h>
 #include <string>
