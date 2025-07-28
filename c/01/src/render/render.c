@@ -59,6 +59,8 @@ void Render_Window(Render *renderer) {
       isWireframeMode = false;
     }
 
+    // would implement batched rendering, draw calls here, if needed
+
     BeginDrawing();
 
     if (pressed == 'r') {

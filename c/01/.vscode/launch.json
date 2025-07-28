@@ -3,7 +3,7 @@
   "configurations": [
     {
       // BUILD with clang
-      "name": "Build with Clang",
+      "name": "Build with Clang"
     }
   ]
 }

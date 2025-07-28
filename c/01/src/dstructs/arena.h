@@ -4,9 +4,14 @@
 #include "stdint.h";
 
 /**
- * ID-based memory arena for allocating objects in contiguous memory blocks
+ * Memory arena for allocating objects in contiguous memory blocks
  * based on the object's size. Inspired by Ryan Fleury, Casey Muratori, Chris
  * Wellons and many others. `uint8_t` is used for byte level operations.
+ *
+ * NOTE: Usually the arenas are created at the Render level, so creating
+ * ID-based arenas would be needed, if these need to be accessed from elsewhere;
+ * example using enums for the type and an array to store the arenas, where the
+ * index would be the value of the enum.
  */
 typedef struct Arena {
   uint8_t base;
@@ -14,12 +19,17 @@ typedef struct Arena {
   uint8_t end;
 } Arena;
 
-void ArenaInit(void);
-void ArenaAlloc(void); // assert, if the memory was allocated successfully
-void ArenaDealloc(
-    void); // assert, if the memory was allocated successfully, make sure to
-void ArenaGrow(void);   // cannot grow, if would be over capacity
-void ArenaShrink(void); // without reallocation, cannot shrink, if size is at 0
+Arena Arena_Init(void);
+/*
+Make sure to use padding while allocating, as the allocating would require the
+number of bytes skipped to ensure that the next allocated block is aligned to
+the required alignment boundary (typically 4, 8, or 16 bytes, depending on the
+platform and data type).
+*/
+void *
+Arena_Alloc(Arena *arena); // assert, if the memory was allocated successfully
+void Arena_Dealloc(Arena *arena); // assert, if the memory was allocated
+                                  // successfully, make sure to
 
 /* How would Arena work together with the Arena Allocator ?
 - Allocators should be separated by their lifetime:
@@ -29,11 +39,10 @@ single frame and need to be released before the next frame; example: ?
 deallocated at a given frame; example: cells that need to be used in multiple
 frames, since the next frame would
   - others (list them)
-- First, we need to initialize the arena using the ArenaAlloactor that would set
+- First, we need to initialize the arena using the Arena_Alloc that would set
 the size and capacity for the given type of object. The caller specifies the
 size and the capacity. The allocation should be done in an aligned manner.
-- Then usually the Arena would grow by one, when more objects need to be
-allocated
+- Then usually objects would allocate
 - Dealloc would delete them all in one call at the end of the arena's lifetime
 
 */

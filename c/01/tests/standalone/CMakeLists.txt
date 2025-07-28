@@ -16,3 +16,5 @@ foreach(file ${STANDALONE_FILES})
     get_filename_component(test_name ${file} NAME_WE)
     add_executable(${test_name}_standalone ${file})
 endforeach()
+
+message(STATUS "Project output path: ${CMAKE_BINARY_DIR}")
