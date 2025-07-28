@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <immintrin.h>
+#include "dstructs/arena.h"
+#include <assert.h>
 
 /*
  * Diagonals relative to the current cell, e.g. if the ratio is 10:
@@ -24,29 +26,24 @@ const int DIAGONAL_INDEXES[] = {(-1 * CELL_HEIGHT_SIZE) - 1,
 const int ADJECENT_INDEXES[] = {-1, +1, (-1 * CELL_HEIGHT_SIZE),
                                 CELL_HEIGHT_SIZE};
 
-// TODO: Use arena allocator instead and rewrite the previous C++ code
-// void Cells2D_InitArraysBasedOnCellSize(Cells2D *cd) {
-//   Cell *cells = (Cell *)_mm_malloc(CELL_COUNT * sizeof(Cell),
-//                                    32); // allocates 32-byte aligned memory
-//   if (!cells) {
-//     throw std::bad_alloc();
-//   }
+void Cells2D_InitArraysBasedOnCellSize(Arena *arena, Cells2D *cd) {
+  Cell *cells = Arena_AllocAligned(arena, CELL_COUNT, DEFAULT_ARENA_ALIGNMENT);
+  assert((!cells, "Unable to allocate cells"));
 
-//   for (int i = 0; i < CELL_COUNT; i++) {
-//     new (&cells[i]) Cell; // using placement new, as the storage is aligned
-//   }
+  cd->cells = cells;
 
-//   cd->cells = cells;
+  int *positionsX =
+      Arena_AllocAligned(arena, CELL_COUNT, DEFAULT_ARENA_ALIGNMENT);
+  cd->positionsX = positionsX;
 
-//   int *positionsX = new int[CELL_COUNT];
-//   cd->positionsX = positionsX;
+  int *positionsY =
+      Arena_AllocAligned(arena, CELL_COUNT, DEFAULT_ARENA_ALIGNMENT);
+  cd->positionsY = positionsY;
 
-//   int *positionsY = new int[CELL_COUNT];
-//   cd->positionsY = positionsY;
-
-//   Color **colors = new Color *[CELL_COUNT];
-//   cd->colors = colors;
-// }
+  Color **colors =
+      Arena_AllocAligned(arena, CELL_COUNT, DEFAULT_ARENA_ALIGNMENT);
+  cd->colors = colors;
+}
 
 // // TODO: Use arena allocator instead
 // void Cells2D_FreeArrays(Cells2D *cd) {

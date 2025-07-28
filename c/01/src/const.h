@@ -2,7 +2,7 @@
 #define CONST_H
 
 #include <raylib.h>
-#include "arena.h"
+#include "dstructs/arena.h"
 
 // the lifetime of this arena is the lifetime of the renderer/application
 Arena *permanentArena;

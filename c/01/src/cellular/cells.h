@@ -4,8 +4,8 @@
 #include "const.h"
 #include "stdint.h"
 
-static const int CELL_HEIGHT_RATIO = 1 << 3; // power of two is recommended
-static const int CELL_WIDTH_RATIO = 1 << 3;  // power of two is recommended
+static const int CELL_HEIGHT_RATIO = 8; // power of two is recommended
+static const int CELL_WIDTH_RATIO = 8;  // power of two is recommended
 static const int CELL_INITIAL_FREQUENCY = 5;
 static const int CELL_HEIGHT_SIZE = SCREEN_HEIGHT / CELL_HEIGHT_RATIO;
 static const int CELL_WIDTH_SIZE = SCREEN_WIDTH / CELL_WIDTH_RATIO;

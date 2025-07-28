@@ -27,9 +27,9 @@ void Render_Window(Render *renderer) {
   int fpsCap = 60;
   SetTargetFPS(fpsCap);
 
-  Gol2dCells2D cd = Gol2dCells2D();
+  Cells2D cd = Cells2D();
 
-  Gol2dGeneratorInitArraysBasedOnCellSize(&cd);
+  Cells2D_InitArraysBasedOnCellSize(&cd);
   GeneratorGOL2D_InitializeCells(&cd);
 
   // Arena allocator should be used instead

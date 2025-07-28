@@ -9,15 +9,13 @@
 
 void GeneratorGOL2D_InitializeCells(Cells2D *cd) {
   int i = 0;
-  for (int posX = 0; posX < DEFAULT_CONST.SCREEN_WIDTH;
-       posX += CELL_WIDTH_RATIO) {
-    for (int posY = 0; posY < DEFAULT_CONST.SCREEN_HEIGHT;
-         posY += CELL_HEIGHT_RATIO) {
+  for (int posX = 0; posX < SCREEN_WIDTH; posX += CELL_WIDTH_RATIO) {
+    for (int posY = 0; posY < SCREEN_HEIGHT; posY += CELL_HEIGHT_RATIO) {
       bool is_alive = rand() % INITIAL_FREQUENCY == 0;
       (&cd->cells[i])->is_alive = is_alive;
       cd->positionsX[i] = posX;
       cd->positionsY[i] = posY;
-      cd->colors[i] = &DEFAULT_CONST.RANDOM_COLORS[rand() % 2];
+      cd->colors[i] = &RANDOM_COLORS[rand() % 2];
       i++;
     }
   }
@@ -44,7 +42,7 @@ void GeneratorGOL2D_NextGeneration(Cells2D *cd, Cells2D *previousCd) {
   freeArrays(previousCd);
 }
 
-/*
+/**
  * Counts the neighbours for the given cell.
  * Every cell interacts with its eight neighbours, which are the cells that
  * are horizontally, vertically, or diagonally adjacent.
