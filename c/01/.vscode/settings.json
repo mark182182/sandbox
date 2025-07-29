@@ -60,7 +60,10 @@
     "str.h": "c",
     "crtdbg.h": "c",
     "render.h": "c",
-    "yvals_core.h": "c"
+    "yvals_core.h": "c",
+    "cells.h": "c",
+    "ctime": "c",
+    "cstdlib": "c"
   },
   // Disable GitHub Copilot for C files
   "github.copilot.enable": {

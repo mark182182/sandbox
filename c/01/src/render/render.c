@@ -1,23 +1,22 @@
 #include "render.h"
 #include "font.h"
-#include "gen_gol2d.h"
+#include "cellular/gen_gol2d.h"
 
 #include <assert.h>
 #include <raylib.h>
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
-#include "str.h"
 #include "const.h"
 #include "menu.h"
+#include <time.h>
 
-/* TODO: Rewrite this in C
-void Render_Window(Render *renderer) {
-  InitWindow(DEFAULT_CONST.SCREEN_WIDTH, DEFAULT_CONST.SCREEN_HEIGHT,
-             "Graphics example");
+// TODO: Rewrite this in C
+void Render_Window(Render *render) {
+  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "CA Renderer");
 
   // load any long living resources here
-  Menu menu = Menu();
-  menu.init();
+  // Menu menu = {0};
+  // Menu_Init();
 
   bool isWireframeMode = false;
   int pressed = 0;
@@ -27,19 +26,20 @@ void Render_Window(Render *renderer) {
   int fpsCap = 60;
   SetTargetFPS(fpsCap);
 
-  Cells2D cd = Cells2D();
+  Cells2D firstCd = {0};
+  Cells2D secondCd = {0};
 
-  Cells2D_InitArraysBasedOnCellSize(&cd);
-  GeneratorGOL2D_InitializeCells(&cd);
+  Cells2D_InitArraysBasedOnCellSize(render->firstGenArena, &firstCd);
+  Cells2D_InitArraysBasedOnCellSize(render->secondGenarena, &secondCd);
 
-  // Arena allocator should be used instead
-  // std::unique_ptr<Gol2dCells2D> previousCd = nullptr;
+  GeneratorGOL2D_InitializeCells(&firstCd);
+  GeneratorGOL2D_InitializeCells(&secondCd);
 
   while (!WindowShouldClose() && pressed != 'q') {
     ClearBackground(WHITE);
 
     // update variables here
-    menu.update();
+    // Menu_Update();
 
     pressed = GetCharPressed();
 
@@ -64,7 +64,12 @@ void Render_Window(Render *renderer) {
     BeginDrawing();
 
     if (pressed == 'r') {
-      GeneratorGOL2D_InitializeCells(&cd);
+      Arena_Free(render->firstGenArena);
+      Arena_Free(render->secondGenarena);
+
+      GeneratorGOL2D_InitializeCells(render->firstGenArena);
+
+      CURRENT_GENERATION = 0;
     }
 
     if (pressed == 'p') {
@@ -80,23 +85,28 @@ void Render_Window(Render *renderer) {
     }
 
     if (isPaused == 0 && deltaTime >= renderSpeed) {
-      auto a = clock();
-      // before the next generation, we have to make a copy of the first,
-      // generation to check the neighbours
-
-      // TODO: instead of doing this, a new arena allocator should be used when
-      // the new cells are generated
-      // previousCd =
-      //     stdunique_ptr<Gol2dCells2D>(Gol2dGeneratordeepCopyCells(&cd));
-      // Gol2dGeneratornextGeneration(&cd, previousCd.get());
+      clock_t time = clock();
+      if (CURRENT_GENERATION % 2 == 0) {
+        GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
+        Arena_Free(&firstCd);
+      } else {
+        GeneratorGOL2D_NextGeneration(&firstCd, &secondCd);
+        Arena_Free(&secondCd);
+      }
       deltaTime = 0;
     }
     deltaTime += GetFrameTime();
 
+    Cells2D actualCd = CURRENT_GENERATION % 2 == 0 ? firstCd : secondCd;
+
     for (int i = 0; i < CELL_COUNT; i++) {
-      if (cd.cells[i].is_alive) {
-        DrawRectangle(cd.positionsX[i], cd.positionsY[i], CELL_HEIGHT_RATIO,
-                      CELL_WIDTH_RATIO, *cd.colors[i]);
+      assert(&actualCd != NULL);
+      if (actualCd.cells[i].is_alive) {
+        DrawRectangle(actualCd.positionsX[i], actualCd.positionsY[i],
+                      CELL_HEIGHT_RATIO, CELL_WIDTH_RATIO,
+                      // TODO: THIS LINE IS CAUSING SEGFAULTS!
+                      *actualCd.colors[i]);
+        // TODO: THIS LINE IS CAUSING SEGFAULTS!
       }
     }
 
@@ -105,10 +115,11 @@ void Render_Window(Render *renderer) {
 
     // free objects after each frame
     // TODO: fix this once arena allocator is implemented
-    // renderer->frameArena->deallocate();
+
+    // Arena_Free(render->frameArena);
+
+    // TODO: Check, if the mode changed, then free the modeArena
   }
 
   // teardown the objects after the window has been closed
-  Cells2D_FreeArrays(&cd);
 }
-*/

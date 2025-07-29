@@ -3,15 +3,39 @@
 
 #include <stdint.h>;
 
-// reserve this much amount of memory upfront, would need to profile first how
-// much more would be needed in the actual application, as this is only for
-// demonstration purpose
-static const size_t PERMANENT_STORAGE_SIZE = 32 * 1024 * 1024; // 32 MB
-static const size_t FRAME_STORAGE_SIZE = 16 * 1024 * 1024;     // 16 MB
+/**
+ * Reserves memory for the lifetime of the application
+ *
+ * NOTE: initial estimate without measurement, increase as needed
+ */
+static const size_t PERMANENT_STORAGE_SIZE = 24 * 1024 * 1024;
+/**
+ * Need storage for all of Cells2D's fields, for which the formula is currently:
+ * CELL_COUNT * numberOfFields * numberOfArenas
+ *
+ *
+ * Example, if CELL_COUNT is 11.520:
+ *
+ * CELL_COUNT * (cells * positionX * positionY * colors) * (firstGenArena +
+ * secondGenArena) = 11.520 * (4*4*4*4) * 2 = 368.640 or 360 KB
+ *
+ * NOTE: The storage is expected to be shared for both arenas, where each gets
+ * half the capacity.
+ */
+static const size_t DOUBLE_GEN_STORAGE_SIZE = 360 * 1024 * 1024;
 
-// backing memory byte storages for the arenas
-uint8_t permanentStorage[PERMANENT_STORAGE_SIZE];
-uint8_t frameStorage[FRAME_STORAGE_SIZE];
+// NOTE: initial estimate without measurement for the lifetime for the 2D and 3D
+// modes, increase as needed
+static const size_t MODE_STORAGE_SIZE = 16 * 1024 * 1024;
+
+// NOTE: initial estimate without measurement, increase as needed
+static const size_t FRAME_STORAGE_SIZE = 8 * 1024 * 1024; // 8 MB
+
+// backing memory storages for the arenas in bytes
+static uint8_t permanentStorage[PERMANENT_STORAGE_SIZE];
+static uint8_t doubleGenStorage[DOUBLE_GEN_STORAGE_SIZE];
+static uint8_t modeArenaStorage[MODE_STORAGE_SIZE];
+static uint8_t frameStorage[FRAME_STORAGE_SIZE];
 
 static const uint8_t DEFAULT_ARENA_ALIGNMENT = 32;
 
@@ -42,6 +66,7 @@ static const uint8_t DEFAULT_ARENA_ALIGNMENT = 32;
  *
  */
 typedef struct Arena {
+  char *name;
   uint8_t *memory; // the pointer to the backing memory storage,
   size_t capacity; // maximum possible memory to be allocated
   size_t used;     // the currently used memory
@@ -50,7 +75,7 @@ typedef struct Arena {
 /**
  * Initial reservation with a backing byte storage as memory.
  */
-Arena Arena_Init(uint8_t *memory, size_t size);
+Arena Arena_Init(char *name, uint8_t *memory, size_t size);
 /**
  * "Bumps" the pointer forward and distributes the pre-allocated memory to the
  * caller. Will use padding to fill up to the specified boundary, e.g. 32
@@ -66,7 +91,7 @@ Arena Arena_Init(uint8_t *memory, size_t size);
 
  */
 void *Arena_AllocAligned(Arena *arena, size_t size, size_t alignment);
-void *Arena_Alloc(Arena *arena, size_t size);
+// void *Arena_Alloc(Arena *arena, size_t size);
 // frees all of the allocated memory at once
 void Arena_Free(Arena *arena);
 

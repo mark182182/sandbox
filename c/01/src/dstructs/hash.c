@@ -1,6 +1,6 @@
 #include "hash.h"
 
-unsigned long hash(unsigned char *str) {
+unsigned long Hash_DJB2(unsigned char *str) {
   unsigned long hash = 5381;
 
   int c;

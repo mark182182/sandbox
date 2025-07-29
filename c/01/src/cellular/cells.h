@@ -1,25 +1,19 @@
 #ifndef CELLS_H
 #define CELLS_H
 
-#include "const.h"
 #include "stdint.h"
+#include "const.h"
 
-static const int CELL_HEIGHT_RATIO = 8; // power of two is recommended
-static const int CELL_WIDTH_RATIO = 8;  // power of two is recommended
-static const int CELL_INITIAL_FREQUENCY = 5;
-static const int CELL_HEIGHT_SIZE = SCREEN_HEIGHT / CELL_HEIGHT_RATIO;
-static const int CELL_WIDTH_SIZE = SCREEN_WIDTH / CELL_WIDTH_RATIO;
-const int CELL_COUNT = CELL_HEIGHT_SIZE * CELL_WIDTH_SIZE;
-
-extern const int CELL_HEIGHT_RATIO;
-extern const int CELL_WIDTH_RATIO;
-extern const int INITIAL_FREQUENCY;
-
-extern const int CELL_HEIGHT_SIZE;
-extern const int CELL_WIDTH_SIZE;
-extern const int CELL_COUNT;
-
-extern const uint8_t CELL_INDEX_SIZE;
+enum {
+  CELL_HEIGHT_RATIO = 8, // power of two is recommended
+  CELL_WIDTH_RATIO = 8,  // power of two is recommended
+  CELL_HEIGHT_SIZE = SCREEN_HEIGHT / CELL_HEIGHT_RATIO,
+  CELL_WIDTH_SIZE = SCREEN_WIDTH / CELL_WIDTH_RATIO,
+  CELL_COUNT = CELL_HEIGHT_SIZE * CELL_WIDTH_SIZE,
+  CELL_INITIAL_GRID_DENSITY = 5, // number of cells cells are alive at start,
+                                 // when the grid is randomized
+  CELL_NEIGHBOUR_SIZE = 4        // Moore neighbourhood
+};
 
 extern const int DIAGONAL_INDEXES[];
 extern const int ADJECENT_INDEXES[];
@@ -31,6 +25,9 @@ typedef struct Cell {
 /*
  * SOA based container for cells to be drawn on the screen in 2D. The cells are
  * stored in height by width in one continous memory block, from top to bottom.
+ *
+ * NOTE: Whenever the fields change, the doubleGenStorage size has to
+ * change as well (see formula in arena.h)
  *
  * The actual cell values (0 or 1) represent the populated/unpopulated cells.
  * E.g. alignment:
@@ -53,7 +50,6 @@ typedef struct Cells2D {
  */
 Cells2D *Cells2D_DeepCopyCells(Cells2D *originalCd);
 
-void Cells2D_InitArraysBasedOnCellSize(Cells2D *cd);
-void Cells2D_FreeArrays(Cells2D *cd);
+void Cells2D_InitArraysBasedOnCellSize(Arena *genArena, Cells2D *cd);
 
 #endif

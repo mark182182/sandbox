@@ -1,7 +1,6 @@
 #include "font.h"
 #include <raylib.h>
 #include <stdio.h>
-#include "str.h"
 
 void LoadFonts() {
 

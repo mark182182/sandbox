@@ -40,10 +40,24 @@ fi
 
 mkdir -p build
 
+# Need to patch raylib's CMakeLists.txt, otherwise it would try to use the CXX compiler as well, but it does not actually need it.
+
+raylib_cmake_path="external/raylib-5.5/CMakeLists.txt"
+if [ -f "$raylib_cmake_path" ]; then
+    echo "Patching raylib CMakeLists.txt..."
+    sed -i 's/project(raylib)/project(raylib LANGUAGES C)/' "$raylib_cmake_path"
+else
+    echo "Warning: raylib CMakeLists.txt not found at $raylib_cmake_path"
+fi
+
+# Needs MSYS2 and `pacman -S mingw-w64-x86_64-clang`, otherwise the MSVC linker would be used.
+
+# Target: x86_64-w64-windows-gnu
+
 cmake -S . -B build \
     -G "MinGW Makefiles" \
     -DCMAKE_BUILD_TYPE="$build_type" \
-    -DCMAKE_C_COMPILER="clang" \
+    -DCMAKE_C_COMPILER="C:/msys64/mingw64/bin/clang.exe" \
     -DCMAKE_MAKE_PROGRAM="make" \
     -DCLANG_VERBOSE="$verbose_mode" \
     -DCLANG_DUMP_AST="$dump_mode" \

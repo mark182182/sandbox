@@ -5,6 +5,8 @@
 #include "const.h"
 #include "cells.h"
 
+extern int CURRENT_GENERATION;
+
 /*
  * Generate random values for each array
  */
@@ -21,6 +23,6 @@ void GeneratorGOL2D_InitializeCells(Cells2D *cd);
  * live cell, as if by reproduction.
  *
  */
-static void GeneratorGOL2D_NextGeneration(Cells2D *cd, Cells2D *previousCd);
+void GeneratorGOL2D_NextGeneration(Cells2D *cd, Cells2D *previousCd);
 
 #endif

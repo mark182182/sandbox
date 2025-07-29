@@ -27,39 +27,36 @@ const int ADJECENT_INDEXES[] = {-1, +1, (-1 * CELL_HEIGHT_SIZE),
                                 CELL_HEIGHT_SIZE};
 
 void Cells2D_InitArraysBasedOnCellSize(Arena *arena, Cells2D *cd) {
-  Cell *cells = Arena_AllocAligned(arena, CELL_COUNT, DEFAULT_ARENA_ALIGNMENT);
-  assert((!cells, "Unable to allocate cells"));
+
+  // TODO: Track the actual generation number and based on it, initialize/free
+  // etc.
+
+  Cell *cells = Arena_AllocAligned(arena, CELL_COUNT * sizeof(Cell),
+                                   DEFAULT_ARENA_ALIGNMENT);
+  assert(cells != NULL && "Unable to allocate cells");
 
   cd->cells = cells;
 
-  int *positionsX =
-      Arena_AllocAligned(arena, CELL_COUNT, DEFAULT_ARENA_ALIGNMENT);
+  int *positionsX = Arena_AllocAligned(arena, CELL_COUNT * sizeof(int),
+                                       DEFAULT_ARENA_ALIGNMENT);
   cd->positionsX = positionsX;
 
-  int *positionsY =
-      Arena_AllocAligned(arena, CELL_COUNT, DEFAULT_ARENA_ALIGNMENT);
+  int *positionsY = Arena_AllocAligned(arena, CELL_COUNT * sizeof(int),
+                                       DEFAULT_ARENA_ALIGNMENT);
   cd->positionsY = positionsY;
 
-  Color **colors =
-      Arena_AllocAligned(arena, CELL_COUNT, DEFAULT_ARENA_ALIGNMENT);
+  Color **colors = Arena_AllocAligned(arena, CELL_COUNT * sizeof(Color *),
+                                      DEFAULT_ARENA_ALIGNMENT);
   cd->colors = colors;
 }
 
-// // TODO: Use arena allocator instead
-// void Cells2D_FreeArrays(Cells2D *cd) {
-//   if (cd->cells != nullptr) {
-//     _mm_free(cd->cells);
-//   }
+// void Cells2D_FreeArena(Arena *firstGenArena, Arena *secondGenArena,
+//                        Cells2D *cd) {
 
-//   if (cd->positionsX != nullptr) {
-//     delete cd->positionsX;
-//   }
-//   if (cd->positionsY != nullptr) {
-//     delete cd->positionsY;
-//   }
-//   if (cd->colors != nullptr) {
-//     delete cd->colors;
-//   }
+//   Arena *arenaToFree =
+//       CURRENT_GENERATION % 2 != 0 ? firstGenArena : secondGenArena;
+
+//   Arena_Free(arenaToFree);
 // }
 
 /**

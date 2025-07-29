@@ -1,16 +1,23 @@
 ﻿cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
 
-# Use Clang
-set(CMAKE_C_COMPILER "clang")
-
 # Set the C standard to C17, as it's one of the most recent stable standards, widely supported.
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
- 
+
+if (MSVC)
+    # For MSVC, set the runtime library to MultiThreaded for release builds
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+else()
+    # For other compilers, use the default C runtime library
+    set(CMAKE_C_STANDARD_LIBRARIES "")
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Debug build should not optimize and should include debug symbols
-set(CMAKE_C_FLAGS_DEBUG "-O0 -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls -Wno-declaration-after-statement")
+# Would add -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls as well, but tricky using on Windows with msys2/MINGW
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g -gcodeview -gdwarf-4 -Wno-declaration-after-statement")
+
 # Release build should optimize and not include debug symbols, disable asserts
 set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
 
@@ -45,7 +52,13 @@ add_compile_options(
     $<$<COMPILE_LANGUAGE:C>:-Wno-documentation-unknown-command>
 )
 
-project("ca_renderer")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_link_options(-fuse-ld=lld -g -Wl,--pdb=)
+else()
+    add_link_options(-fuse-ld=lld)
+endif()
+
+project(ca_renderer LANGUAGES C)
 
 # Add any test directories
 
@@ -57,7 +70,7 @@ add_subdirectory(tests/benchmark)
 add_subdirectory(tests/e2e)
 
 # Add source to this project's executable.
-file(GLOB RENDERER_SRC "src/*.c")
+file(GLOB_RECURSE RENDERER_SRC "src/*.c")
 add_executable(ca_renderer "${CMAKE_SOURCE_DIR}/resources" ${RENDERER_SRC})
 target_include_directories(ca_renderer PRIVATE src)
 
@@ -98,11 +111,31 @@ if (NOT raylib_FOUND)
     FetchContent_GetProperties(raylib)
     if (NOT raylib_POPULATED)
         set(FETCHCONTENT_QUIET NO)
+        set(GRAPHICS GRAPHICS_API_OPENGL_43 CACHE STRING "" FORCE)
         FetchContent_MakeAvailable(raylib)
         set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     endif()
 endif()
 target_link_libraries(${PROJECT_NAME} raylib)
+
+if(MSVC OR MINGW OR MINGW32 OR MINGW64)
+    # For MSVC or MinGW, link against Windows libraries
+    target_link_libraries(${PROJECT_NAME}
+        raylib
+        kernel32
+        user32
+        gdi32
+        winmm
+        shell32
+    )
+else()
+    # Other compilers, possibly Unix-like
+    target_link_libraries(${PROJECT_NAME}
+        raylib
+        m
+        c
+    )
+endif()
 
 # Copy resources directory to the output directory
 add_custom_command(TARGET ca_renderer POST_BUILD

@@ -24,3 +24,8 @@ This project is part of thethes is work for rendering 2D/3D cellular automata in
   - `e2e/` - few end-to-end tests that run the renderer with preconfigured settings and asserts via screenshot comparison
   - `scratch/` - a place for experiments and temporary tests that don't fit into the other categories; example: `ray.c` for testing different raylib related features
   - `standalone/` - contains tests that can be run independently of the main renderer, useful for testing specific features or functionalities without the full context of the renderer; example: `basics.c` for testing basic C features. These are intentionally not run as CMake tests. These are also to write smaller pieces of the implementation first that don't require any external libraries (i.e. raylib in this case), without having to compile the whole renderer.
+
+# Tools
+
+- Profiler: https://github.com/wolfpld/tracy/tree/master
+- Debugger: https://github.com/EpicGamesExt/raddebugger

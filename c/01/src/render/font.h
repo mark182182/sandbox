@@ -2,7 +2,6 @@
 #define FONT_H
 
 #include <stdio.h>
-#include "str.h"
 #include <raylib.h>
 
 // using FontType as the name would clash with raylib
@@ -11,6 +10,6 @@ typedef enum RenderFontType {
   MAX_FONT_TYPE
 } RenderFontType;
 
-Font fonts_by_type[MAX_FONT_TYPE];
+static Font fonts_by_type[MAX_FONT_TYPE];
 
 #endif
