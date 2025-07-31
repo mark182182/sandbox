@@ -19,12 +19,15 @@ static const size_t PERMANENT_STORAGE_SIZE = 24 * 1024 * 1024;
  * Example, if CELL_COUNT is 11.520:
  *
  * CELL_COUNT * (cells * positionX * positionY * colors) * (firstGenArena +
- * secondGenArena) = 11.520 * (4*4*4*4) * 2 = 368.640 or 360 KB
+ * secondGenArena) = 11.520 * (4*4*4*4) * 2 = 737.280 or 720 KB
+ *
+ * For some reason the actual used memory for one Cells2D will be: 195.840 (so
+ * 196.608, 192KB), which would be 393.216 (384 KB)
  *
  * NOTE: The storage is expected to be shared for both arenas, where each gets
  * half the capacity.
  */
-static const size_t DOUBLE_GEN_STORAGE_SIZE = 360 * 1024 * 1024;
+static const size_t DOUBLE_GEN_STORAGE_SIZE = 192 * 2 * 1024;
 
 // NOTE: initial estimate without measurement for the lifetime for the 2D and 3D
 // modes, increase as needed

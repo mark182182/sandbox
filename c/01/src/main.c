@@ -46,7 +46,7 @@ int main() {
   Render render = {.currentMode = RENDER_MODE_INIT,
                    .frameArena = &frameArena,
                    .firstGenArena = &firstGenArena,
-                   .secondGenarena = &secondGenArena,
+                   .secondGenArena = &secondGenArena,
                    .modeArena = &modeArena};
 
   Render_Window(&render);

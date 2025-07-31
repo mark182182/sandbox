@@ -14,7 +14,7 @@ typedef enum RenderMode {
 typedef struct Render {
   Arena *modeArena;
   Arena *firstGenArena;
-  Arena *secondGenarena;
+  Arena *secondGenArena;
   Arena *frameArena;
   RenderMode currentMode;
 } Render;

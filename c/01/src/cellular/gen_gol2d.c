@@ -28,18 +28,18 @@ const uint8_t OVERPOPULATION_UPPER_CAP = 3;
 
 // TODO: use a compute shader instead (since OpenGL 4.3)
 // possibly binding the 2 SSBOs and call glDispatchCompute and glMemoryBarrier
-void GeneratorGOL2D_NextGeneration(Cells2D *currentCd, Cells2D *previousCd) {
+void GeneratorGOL2D_NextGeneration(Cells2D *outputCells, Cells2D *inputCells) {
 
   for (int i = 0; i < CELL_COUNT; i++) {
-    int neighbours = __CheckNeighbours(previousCd, i);
+    int neighbours = __CheckNeighbours(inputCells, i);
     // under or overpopulation
     if (neighbours < UNDERPOPULATION_UPPER_CAP ||
         neighbours > OVERPOPULATION_UPPER_CAP) {
-      currentCd->cells[i].is_alive = false;
+      outputCells->cells[i].is_alive = false;
       // reproduction
-    } else if (!currentCd->cells[i].is_alive &&
+    } else if (!outputCells->cells[i].is_alive &&
                neighbours == OVERPOPULATION_UPPER_CAP) {
-      currentCd->cells[i].is_alive = true;
+      outputCells->cells[i].is_alive = true;
     }
   }
 

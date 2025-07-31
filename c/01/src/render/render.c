@@ -19,7 +19,6 @@ void Render_Window(Render *render) {
   bool isWireframeMode = false;
   int pressed = 0;
   bool isPaused = false;
-  float renderSpeed = 0.2f;
   float deltaTime = 0;
   int fpsCap = 60;
   SetTargetFPS(fpsCap);
@@ -28,7 +27,7 @@ void Render_Window(Render *render) {
   Cells2D secondCd = {0};
 
   Cells2D_InitArraysBasedOnCellSize(render->firstGenArena, &firstCd);
-  Cells2D_InitArraysBasedOnCellSize(render->secondGenarena, &secondCd);
+  Cells2D_InitArraysBasedOnCellSize(render->secondGenArena, &secondCd);
 
   GeneratorGOL2D_InitializeCells(&firstCd);
 
@@ -63,7 +62,8 @@ void Render_Window(Render *render) {
     if (pressed == 'r') {
       __Render_ResetCells(render->firstGenArena, &firstCd);
       GeneratorGOL2D_InitializeCells(&firstCd);
-      __Render_ResetCells(render->secondGenarena, &secondCd);
+      __Render_ResetCells(render->secondGenArena, &secondCd);
+      GeneratorGOL2D_InitializeCells(&secondCd);
       CURRENT_GENERATION = 0;
     }
 
@@ -71,23 +71,16 @@ void Render_Window(Render *render) {
       isPaused = !isPaused;
     }
 
-    if (pressed == 'w') {
-      renderSpeed -= 0.1f;
-    }
-
-    if (pressed == 's') {
-      renderSpeed += 0.1f;
-    }
-
-    // TODO: Somehow the generations not working properly
-    if (isPaused == 0 && deltaTime >= renderSpeed) {
+    // TODO: The simulation is not working properly, because even for the initial state to go on to the next generation some cells need to be alive, in order for the whole grid not to die out.
+    if (isPaused == 0) {
       clock_t time = clock();
       if (CURRENT_GENERATION % 2 == 0) {
+        // TODO: For some reason, the first generation will be rendered correctly, but any subsequent (due to reset issues possibly) generation will be not.
         GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
-        __Render_ResetCells(render->firstGenArena, &firstCd);
+        //__Render_ResetCells(render->firstGenArena, &firstCd);
       } else {
-        GeneratorGOL2D_NextGeneration(&firstCd, &secondCd);
-        __Render_ResetCells(render->secondGenarena, &secondCd);
+        // GeneratorGOL2D_NextGeneration(&firstCd, &secondCd);
+        //__Render_ResetCells(render->secondGenArena, &secondCd);
       }
       deltaTime = 0;
     }
@@ -95,6 +88,7 @@ void Render_Window(Render *render) {
 
     Cells2D actualCd = CURRENT_GENERATION % 2 == 0 ? secondCd : firstCd;
 
+    // TODO: This should be drawn in a single call
     for (int i = 0; i < CELL_COUNT; i++) {
       assert(&actualCd != NULL);
       if (actualCd.cells[i].is_alive) {

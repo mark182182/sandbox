@@ -13,9 +13,10 @@ if ! command -v make &> /dev/null; then
     exit 1
 fi
 
-build_type=$1
-if [ -z "$build_type" ]; then
+if [[ "$*" =~ "--build_type" ]]; then
     echo "No build type specified. Defaulting to 'DEBUG'."
+    build_type=$(echo "$*" | grep -oP '(?<=--build_type\s)\w+')
+else
     build_type="DEBUG"
 fi
 
