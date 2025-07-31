@@ -54,6 +54,12 @@ fi
 
 # Target: x86_64-w64-windows-gnu
 
+if [[ "$*" != *"--no-tidy"* ]]; then
+    echo "Running clang-tidy..."
+    clang-tidy -p build ./src/**/*.c -checks=-*,clang-analyzer-*,concurrency-*,modernize-*,performance-*,readability-*
+fi
+
+export CC=clang
 cmake -S . -B build \
     -G "MinGW Makefiles" \
     -DCMAKE_BUILD_TYPE="$build_type" \

@@ -1,7 +1,9 @@
 #ifndef ARENA_H
 #define ARENA_H
 
-#include <stdint.h>;
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * Reserves memory for the lifetime of the application
@@ -75,7 +77,7 @@ typedef struct Arena {
 /**
  * Initial reservation with a backing byte storage as memory.
  */
-Arena Arena_Init(char *name, uint8_t *memory, size_t size);
+Arena Arena_Init(char *name, uint8_t *memory, size_t capacity);
 /**
  * "Bumps" the pointer forward and distributes the pre-allocated memory to the
  * caller. Will use padding to fill up to the specified boundary, e.g. 32
@@ -91,7 +93,7 @@ Arena Arena_Init(char *name, uint8_t *memory, size_t size);
 
  */
 void *Arena_AllocAligned(Arena *arena, size_t size, size_t alignment);
-// void *Arena_Alloc(Arena *arena, size_t size);
+void *Arena_AllocAlignedZeroed(Arena *arena, size_t size, size_t alignment);
 // frees all of the allocated memory at once
 void Arena_Free(Arena *arena);
 

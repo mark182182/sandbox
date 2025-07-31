@@ -10,13 +10,11 @@
 #include "menu.h"
 #include <time.h>
 
-// TODO: Rewrite this in C
 void Render_Window(Render *render) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "CA Renderer");
 
   // load any long living resources here
-  // Menu menu = {0};
-  // Menu_Init();
+  Menu menu = Menu_Init();
 
   bool isWireframeMode = false;
   int pressed = 0;
@@ -33,13 +31,12 @@ void Render_Window(Render *render) {
   Cells2D_InitArraysBasedOnCellSize(render->secondGenarena, &secondCd);
 
   GeneratorGOL2D_InitializeCells(&firstCd);
-  GeneratorGOL2D_InitializeCells(&secondCd);
 
   while (!WindowShouldClose() && pressed != 'q') {
     ClearBackground(WHITE);
 
     // update variables here
-    // Menu_Update();
+    Menu_Update(&menu);
 
     pressed = GetCharPressed();
 
@@ -64,11 +61,9 @@ void Render_Window(Render *render) {
     BeginDrawing();
 
     if (pressed == 'r') {
-      Arena_Free(render->firstGenArena);
-      Arena_Free(render->secondGenarena);
-
-      GeneratorGOL2D_InitializeCells(render->firstGenArena);
-
+      __Render_ResetCells(render->firstGenArena, &firstCd);
+      GeneratorGOL2D_InitializeCells(&firstCd);
+      __Render_ResetCells(render->secondGenarena, &secondCd);
       CURRENT_GENERATION = 0;
     }
 
@@ -84,42 +79,43 @@ void Render_Window(Render *render) {
       renderSpeed += 0.1f;
     }
 
+    // TODO: Somehow the generations not working properly
     if (isPaused == 0 && deltaTime >= renderSpeed) {
       clock_t time = clock();
       if (CURRENT_GENERATION % 2 == 0) {
         GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
-        Arena_Free(&firstCd);
+        __Render_ResetCells(render->firstGenArena, &firstCd);
       } else {
         GeneratorGOL2D_NextGeneration(&firstCd, &secondCd);
-        Arena_Free(&secondCd);
+        __Render_ResetCells(render->secondGenarena, &secondCd);
       }
       deltaTime = 0;
     }
     deltaTime += GetFrameTime();
 
-    Cells2D actualCd = CURRENT_GENERATION % 2 == 0 ? firstCd : secondCd;
+    Cells2D actualCd = CURRENT_GENERATION % 2 == 0 ? secondCd : firstCd;
 
     for (int i = 0; i < CELL_COUNT; i++) {
       assert(&actualCd != NULL);
       if (actualCd.cells[i].is_alive) {
         DrawRectangle(actualCd.positionsX[i], actualCd.positionsY[i],
-                      CELL_HEIGHT_RATIO, CELL_WIDTH_RATIO,
-                      // TODO: THIS LINE IS CAUSING SEGFAULTS!
-                      *actualCd.colors[i]);
-        // TODO: THIS LINE IS CAUSING SEGFAULTS!
+                      CELL_HEIGHT_RATIO, CELL_WIDTH_RATIO, *actualCd.colors[i]);
       }
     }
 
-    Menu_Draw();
+    Menu_Draw(&menu);
     EndDrawing();
 
     // free objects after each frame
-    // TODO: fix this once arena allocator is implemented
-
-    // Arena_Free(render->frameArena);
+    Arena_Free(render->frameArena);
 
     // TODO: Check, if the mode changed, then free the modeArena
   }
 
   // teardown the objects after the window has been closed
+}
+
+void __Render_ResetCells(Arena *arena, Cells2D *cells) {
+  Arena_Free(arena);
+  Cells2D_InitArraysBasedOnCellSize(arena, cells);
 }

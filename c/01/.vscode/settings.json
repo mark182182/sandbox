@@ -63,7 +63,16 @@
     "yvals_core.h": "c",
     "cells.h": "c",
     "ctime": "c",
-    "cstdlib": "c"
+    "cstdlib": "c",
+    "stdbool.h": "c",
+    "cstring": "c",
+    "variant": "c",
+    "*.inc": "c",
+    "text_encoding": "c",
+    "bitset": "cpp",
+    "string_view": "cpp",
+    "test_util.h": "c",
+    "random": "c"
   },
   // Disable GitHub Copilot for C files
   "github.copilot.enable": {

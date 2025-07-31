@@ -10,6 +10,8 @@ typedef enum RenderFontType {
   MAX_FONT_TYPE
 } RenderFontType;
 
-static Font fonts_by_type[MAX_FONT_TYPE];
+extern Font fonts_by_type[MAX_FONT_TYPE];
+
+void LoadFonts();
 
 #endif

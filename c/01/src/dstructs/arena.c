@@ -1,5 +1,6 @@
 #include "arena.h"
 #include <stdio.h>
+#include <string.h>
 
 static void exitWithMsg(char *msg) {
   fprintf(stderr, "Error: %s\n", msg);
@@ -43,6 +44,15 @@ inline void *Arena_AllocAligned(Arena *arena, size_t size, size_t alignment) {
 
   arena->used = newUsedSize;
   return (void *)alignedAddr;
+}
+
+inline void *Arena_AllocAlignedZeroed(Arena *arena, size_t size,
+                                      size_t alignment) {
+  void *ptr = Arena_AllocAligned(arena, size, alignment);
+  if (ptr != NULL) {
+    memset(ptr, 0, size);
+  }
+  return ptr;
 }
 
 /*

@@ -15,7 +15,7 @@ endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Debug build should not optimize and should include debug symbols
-# Would add -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls as well, but tricky using on Windows with msys2/MINGW
+# Would add -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls as well, but tricky using on Windows with msys2/MINGW, so gdb has to be used instead
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g -gcodeview -gdwarf-4 -Wno-declaration-after-statement")
 
 # Release build should optimize and not include debug symbols, disable asserts
@@ -52,7 +52,7 @@ add_compile_options(
     $<$<COMPILE_LANGUAGE:C>:-Wno-documentation-unknown-command>
 )
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     add_link_options(-fuse-ld=lld -g -Wl,--pdb=)
 else()
     add_link_options(-fuse-ld=lld)
@@ -70,9 +70,9 @@ add_subdirectory(tests/benchmark)
 add_subdirectory(tests/e2e)
 
 # Add source to this project's executable.
-file(GLOB_RECURSE RENDERER_SRC "src/*.c")
-add_executable(ca_renderer "${CMAKE_SOURCE_DIR}/resources" ${RENDERER_SRC})
-target_include_directories(ca_renderer PRIVATE src)
+file(GLOB_RECURSE CA_RENDERER_SRC CONFIGURE_DEPENDS "src/*.c")
+add_executable(ca_renderer "${CMAKE_SOURCE_DIR}/resources" ${CA_RENDERER_SRC})
+target_include_directories(ca_renderer PRIVATE src external/raylib/src)
 
 # Raylib
 set(RAYLIB_VERSION 5.5)
@@ -116,7 +116,6 @@ if (NOT raylib_FOUND)
         set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     endif()
 endif()
-target_link_libraries(${PROJECT_NAME} raylib)
 
 if(MSVC OR MINGW OR MINGW32 OR MINGW64)
     # For MSVC or MinGW, link against Windows libraries

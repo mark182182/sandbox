@@ -31,22 +31,22 @@ void Cells2D_InitArraysBasedOnCellSize(Arena *arena, Cells2D *cd) {
   // TODO: Track the actual generation number and based on it, initialize/free
   // etc.
 
-  Cell *cells = Arena_AllocAligned(arena, CELL_COUNT * sizeof(Cell),
-                                   DEFAULT_ARENA_ALIGNMENT);
+  Cell *cells = Arena_AllocAlignedZeroed(arena, CELL_COUNT * sizeof(Cell),
+                                         DEFAULT_ARENA_ALIGNMENT);
   assert(cells != NULL && "Unable to allocate cells");
 
   cd->cells = cells;
 
-  int *positionsX = Arena_AllocAligned(arena, CELL_COUNT * sizeof(int),
-                                       DEFAULT_ARENA_ALIGNMENT);
+  int *positionsX = Arena_AllocAlignedZeroed(arena, CELL_COUNT * sizeof(int),
+                                             DEFAULT_ARENA_ALIGNMENT);
   cd->positionsX = positionsX;
 
-  int *positionsY = Arena_AllocAligned(arena, CELL_COUNT * sizeof(int),
-                                       DEFAULT_ARENA_ALIGNMENT);
+  int *positionsY = Arena_AllocAlignedZeroed(arena, CELL_COUNT * sizeof(int),
+                                             DEFAULT_ARENA_ALIGNMENT);
   cd->positionsY = positionsY;
 
-  Color **colors = Arena_AllocAligned(arena, CELL_COUNT * sizeof(Color *),
-                                      DEFAULT_ARENA_ALIGNMENT);
+  Color **colors = Arena_AllocAlignedZeroed(arena, CELL_COUNT * sizeof(Color *),
+                                            DEFAULT_ARENA_ALIGNMENT);
   cd->colors = colors;
 }
 

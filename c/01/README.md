@@ -15,6 +15,7 @@ This project is part of thethes is work for rendering 2D/3D cellular automata in
 - Enums are prefixed with the module name, e.g. `RenderMode`, `FontType`, and use full upper snake case for the enum values, e.g. `RENDER_MODE_2D`, `FONT_TYPE_FIRA_CODE_RETINA`.
 - Enums are used when multiple values need to be represented, such as render modes or font types. They are defined in the header files of the respective modules.
 - Static const for any compile-time constants that are not integers or evaluated from expressions at compile-time, since these cannot be enums. These are defined in the header files as well.
+- All method names in tests follow snake case, e.g. `can_hit_cache_with_alignment`, `can_init_arena`, `can_alloc_and_zero_arena`. This is to distinguish them from the actual functions in the codebase.
 
 # Testing
 
@@ -28,4 +29,5 @@ This project is part of thethes is work for rendering 2D/3D cellular automata in
 # Tools
 
 - Profiler: https://github.com/wolfpld/tracy/tree/master
-- Debugger: https://github.com/EpicGamesExt/raddebugger
+- Debugger: https://github.com/EpicGamesExt/raddebugger and [debug.sh](debug.sh) script to gdb with the current build for e.g. segment faults or other issues.
+- clang-tidy: Linter for displaying warnings and errors in the code, which can be run, https://clang.llvm.org/extra/clang-tidy/

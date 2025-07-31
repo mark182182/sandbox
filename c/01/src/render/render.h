@@ -2,6 +2,7 @@
 #define RENDER_H
 
 #include "dstructs/arena.h"
+#include "cellular/cells.h"
 
 typedef enum RenderMode {
   RENDER_MODE_INIT,
@@ -20,4 +21,5 @@ typedef struct Render {
 
 void Render_Window(Render *render);
 
+void __Render_ResetCells(Arena *arena, Cells2D *cells);
 #endif
