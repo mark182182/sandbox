@@ -2,17 +2,26 @@
 #include <stdio.h>
 #include <string.h>
 
-static void exitWithMsg(char *msg) {
+static void __ExitWithMsg(char *msg) {
   fprintf(stderr, "Error: %s\n", msg);
+  exit(1);
+}
+
+static void __ExitWithArenaMsg(Arena *arena, char *msg) {
+  fprintf(stderr, "Error: %s\n", msg);
+  if (arena != NULL) {
+    fprintf(stderr, "Arena was: %s, capacity: %zu, used: %zu\n", arena->name,
+            arena->capacity, arena->used);
+  }
   exit(1);
 }
 
 Arena Arena_Init(char *name, uint8_t *memory, size_t capacity) {
   if (!memory) {
-    exitWithMsg("Memory cannot be null");
+    __ExitWithMsg("Memory cannot be null");
   }
   if (capacity == 0) {
-    exitWithMsg("Capacity must be larger than 0");
+    __ExitWithMsg("Capacity must be larger than 0");
   };
 
   Arena arena = {
@@ -32,14 +41,10 @@ inline void *Arena_AllocAligned(Arena *arena, size_t size, size_t alignment) {
   size_t newUsedSize = arena->used + paddingSize + size;
 
   if (newUsedSize > arena->capacity) {
-    printf_s("\nnewUsedSize\n");
-    printf_s("%zu", newUsedSize);
-    printf_s("\ncap\n");
-    printf_s("%zu", arena->capacity);
-    printf_s("\n");
-
-    printf_s(arena->name);
-    exitWithMsg("Cannot allocate memory, arena would be over capacity");
+    printf_s("Allocation would be over the limit");
+    printf_s("\nWanted newUsedSize: %zu\n", newUsedSize);
+    __ExitWithArenaMsg(arena,
+                       "Cannot allocate memory, arena would be over capacity");
   }
 
   arena->used = newUsedSize;

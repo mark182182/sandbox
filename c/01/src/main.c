@@ -35,10 +35,10 @@ int main() {
    * n+1 cells: allocates memory, sets the state based on the rule
    * n cells: generation: memory gets reset
    */
-  Arena firstGenArena = Arena_Init("firstGenArena", &doubleGenStorage,
-                                   DOUBLE_GEN_STORAGE_SIZE / 2);
-  Arena secondGenArena = Arena_Init("secondGenArena", &doubleGenStorage,
-                                    DOUBLE_GEN_STORAGE_SIZE / 2);
+  Arena firstGenArena =
+      Arena_Init("firstGenArena", &firstGenStorage, GEN_STORAGE_SIZE);
+  Arena secondGenArena =
+      Arena_Init("secondGenArena", &secondGenStorage, GEN_STORAGE_SIZE);
 
   Arena modeArena =
       Arena_Init("modeArena", &modeArenaStorage, MODE_STORAGE_SIZE);

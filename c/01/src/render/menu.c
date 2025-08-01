@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "common.h"
+#include <stdio.h>
 #include <string.h>
 
 Menu Menu_Init() {
@@ -23,22 +24,28 @@ void Menu_Draw(Menu *menu) {
 
   Vector2 currentTextPos = {.x = firstTextPos.x, .y = firstTextPos.y};
 
-  char fpsBuffer[128];
+  // TODO: Revise this, only a temp solution
+  char fpsText[128] = "FPS: ";
+  char fpsBuffer[6];
   int fpsBase = 10; // decimal base
-  char *fpsText = itoa(GetFPS(), fpsBuffer, fpsBase);
+  itoa(GetFPS(), fpsBuffer, fpsBase);
+  for (int i = 0; i < strlen(fpsBuffer); i++) {
+    fpsText[strlen(fpsText)] = fpsBuffer[i];
+  }
 
   int dec;
   int sign;
   char *frameTime = ecvt(GetFrameTime(), fpsBase, &dec, &sign);
-  char frameTimeBuffer[64];
+  char frameTimeText[64] = "Frametime: 0.";
 
-  char decBuffer[8];
-  char *decText = itoa(dec, decBuffer, fpsBase);
+  char decBuffer[4];
+  for (int i = 0; i > dec; i--) {
+    frameTimeText[strlen(frameTimeText)] = '0';
+  }
+  for (int i = 0; i < strlen(frameTime); i++) {
+    frameTimeText[strlen(frameTimeText)] = frameTime[i];
+  }
 
-  strcpy(frameTimeBuffer, decText);
-  //strcpy(frameTimeBuffer, frameTime);
-
-  char *frametimeText = frameTimeBuffer;
   char *wireFrameText = "Wireframe mode";
   char *quitText = "Quit";
 
@@ -47,7 +54,7 @@ void Menu_Draw(Menu *menu) {
 
   __DrawTextInMenu(menu, firstTextPos, &currentTextPos, fpsText, fontSize,
                    BLACK, RED, noOp);
-  __DrawTextInMenu(menu, firstTextPos, &currentTextPos, frametimeText, fontSize,
+  __DrawTextInMenu(menu, firstTextPos, &currentTextPos, frameTimeText, fontSize,
                    BLACK, RED, noOp);
   __DrawTextInMenu(menu, firstTextPos, &currentTextPos, wireFrameText, fontSize,
                    BLACK, RED, noOp);

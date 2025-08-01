@@ -30,6 +30,7 @@ void Render_Window(Render *render) {
   Cells2D_InitArraysBasedOnCellSize(render->secondGenArena, &secondCd);
 
   GeneratorGOL2D_InitializeCells(&firstCd);
+  GeneratorGOL2D_InitializeCells(&secondCd);
 
   while (!WindowShouldClose() && pressed != 'q') {
     ClearBackground(WHITE);
@@ -80,11 +81,11 @@ void Render_Window(Render *render) {
         // TODO: For some reason, the first generation will be rendered
         // correctly, but any subsequent (due to reset issues possibly)
         // generation will be not.
-        GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
-        //__Render_ResetCells(render->firstGenArena, &firstCd);
+        // GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
+        // __Render_ResetCells(render->firstGenArena, &firstCd);
       } else {
         // GeneratorGOL2D_NextGeneration(&firstCd, &secondCd);
-        //__Render_ResetCells(render->secondGenArena, &secondCd);
+        // __Render_ResetCells(render->secondGenArena, &secondCd);
       }
       deltaTime = 0;
     }
