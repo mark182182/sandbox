@@ -4,6 +4,8 @@
 #include "dstructs/arena.h"
 #include "cellular/cells.h"
 
+extern float render2DSpeed;
+
 typedef enum RenderMode {
   RENDER_MODE_INIT,
   RENDER_MODE_2D,
@@ -12,14 +14,13 @@ typedef enum RenderMode {
 } RenderMode;
 
 typedef struct Render {
-  Arena *modeArena;
-  Arena *firstGenArena;
-  Arena *secondGenArena;
-  Arena *frameArena;
+  Arena *mode2DArena;
+  Arena *mode3DArena;
+  Arena *frame2DArena;
+  Arena *frame3DArena;
   RenderMode currentMode;
 } Render;
 
 void Render_Window(Render *render);
 
-void __Render_ResetCells(Arena *arena, Cells2D *c2d);
 #endif

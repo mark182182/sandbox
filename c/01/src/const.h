@@ -18,7 +18,7 @@ extern bool DEBUG_MODE;
 // value has to be passed of the given enum type to state the intent)
 
 enum {
-  SCREEN_WIDTH = 1024,
+  SCREEN_WIDTH = 1280,
   SCREEN_HEIGHT = 720,
 };
 

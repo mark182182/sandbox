@@ -16,6 +16,8 @@ void GeneratorGOL2D_InitializeCells(Cells2D *c2d, bool randomizeAlive) {
       if (randomizeAlive) {
         bool is_alive = rand() % CELL_INITIAL_GRID_DENSITY == 0;
         c2d->cells[i].is_alive = is_alive;
+      } else {
+        c2d->cells[i].is_alive = 0;
       }
       c2d->positionsX[i] = posX;
       c2d->positionsY[i] = posY;
@@ -43,10 +45,7 @@ void GeneratorGOL2D_NextGeneration(Cells2D *outC2d, Cells2D *inC2d) {
       outC2d->cells[i].is_alive = true;
     }
   }
-}
-
-void GeneratorGOL2D_IncrementGen() {
-  CURRENT_GENERATION = CURRENT_GENERATION + 1;
+  CURRENT_GENERATION++;
 }
 
 /**

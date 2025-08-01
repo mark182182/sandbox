@@ -24,6 +24,5 @@ void GeneratorGOL2D_InitializeCells(Cells2D *c2d, bool randomizeAlive);
  *
  */
 void GeneratorGOL2D_NextGeneration(Cells2D *outC2d, Cells2D *inC2d);
-void GeneratorGOL2D_IncrementGen();
 
 #endif

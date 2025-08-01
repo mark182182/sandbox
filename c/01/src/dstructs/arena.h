@@ -25,21 +25,23 @@ static const size_t PERMANENT_STORAGE_SIZE = 24 * 1024 * 1024;
  * For some reason the actual used memory for one Cells2D will be: 195.840 (so
  * 196.608, 192KB), which would be 393.216 (384 KB)
  */
-static const size_t GEN_STORAGE_SIZE = 192 * 1024;
-
+static const size_t MODE_2D_STORAGE_SIZE = 720 * 1024;
 // NOTE: initial estimate without measurement for the lifetime for the 2D and 3D
 // modes, increase as needed
-static const size_t MODE_STORAGE_SIZE = 16 * 1024 * 1024;
+static const size_t MODE_3D_STORAGE_SIZE = 16 * 1024 * 1024;
 
 // NOTE: initial estimate without measurement, increase as needed
-static const size_t FRAME_STORAGE_SIZE = 8 * 1024 * 1024; // 8 MB
+static const size_t FRAME_3D_STORAGE_SIZE = 8 * 1024;
+static const size_t FRAME_2D_STORAGE_SIZE = 8 * 1024 * 1024; // 8 MB
 
 // backing memory storages for the arenas in bytes
 static uint8_t permanentStorage[PERMANENT_STORAGE_SIZE];
-static uint8_t firstGenStorage[GEN_STORAGE_SIZE];
-static uint8_t secondGenStorage[GEN_STORAGE_SIZE];
-static uint8_t modeArenaStorage[MODE_STORAGE_SIZE];
-static uint8_t frameStorage[FRAME_STORAGE_SIZE];
+
+static uint8_t mode2DArenaStorage[MODE_2D_STORAGE_SIZE];
+static uint8_t mode3DArenaStorage[MODE_3D_STORAGE_SIZE];
+
+static uint8_t frame2DArenaStorage[FRAME_2D_STORAGE_SIZE];
+static uint8_t frame3DArenaStorage[FRAME_3D_STORAGE_SIZE];
 
 static const uint8_t DEFAULT_ARENA_ALIGNMENT = 32;
 
@@ -94,9 +96,10 @@ extern inline Arena Arena_Init(char *name, uint8_t *memory, size_t capacity);
  * @return the pointer to allocated memory, or NULL if insufficient space
 
  */
-extern inline void *Arena_AllocAligned(Arena *arena, size_t size, size_t alignment);
+extern inline void *Arena_AllocAligned(Arena *arena, size_t size,
+                                       size_t alignment);
 extern inline void *Arena_AllocAlignedZeroed(Arena *arena, size_t size,
-                                      size_t alignment);
+                                             size_t alignment);
 // frees all of the allocated memory at once
 extern inline void Arena_Free(Arena *arena);
 extern inline void Arena_FreeZeroed(Arena *arena);

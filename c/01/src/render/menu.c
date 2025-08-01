@@ -7,6 +7,7 @@
 #include "common.h"
 #include <stdio.h>
 #include <string.h>
+#include "render.h"
 
 Menu Menu_Init() {
   LoadFonts();
@@ -27,23 +28,32 @@ void Menu_Draw(Menu *menu) {
   // TODO: Revise this, only a temp solution
   char fpsText[128] = "FPS: ";
   char fpsBuffer[6];
-  int fpsBase = 10; // decimal base
-  itoa(GetFPS(), fpsBuffer, fpsBase);
+  int decBase = 10; // decimal base
+  itoa(GetFPS(), fpsBuffer, decBase);
+
   for (int i = 0; i < strlen(fpsBuffer); i++) {
     fpsText[strlen(fpsText)] = fpsBuffer[i];
   }
 
   int dec;
   int sign;
-  char *frameTime = ecvt(GetFrameTime(), fpsBase, &dec, &sign);
+  char *frameTime = ecvt(GetFrameTime(), decBase, &dec, &sign);
   char frameTimeText[64] = "Frametime: 0.";
 
-  char decBuffer[4];
   for (int i = 0; i > dec; i--) {
     frameTimeText[strlen(frameTimeText)] = '0';
   }
   for (int i = 0; i < strlen(frameTime); i++) {
     frameTimeText[strlen(frameTimeText)] = frameTime[i];
+  }
+
+  char render2DSpeedText[64] = "Render speed: 0.0";
+  char *render2DSpeedBuffer = ecvt(render2DSpeed, decBase, &dec, &sign);
+  for (int i = 0; i > dec; i--) {
+    render2DSpeedText[strlen(render2DSpeedText)] = '0';
+  }
+  for (int i = 0; i < strlen(render2DSpeedBuffer); i++) {
+    render2DSpeedText[strlen(render2DSpeedText)] = render2DSpeedBuffer[i];
   }
 
   char *wireFrameText = "Wireframe mode";
@@ -56,6 +66,8 @@ void Menu_Draw(Menu *menu) {
                    BLACK, RED, noOp);
   __DrawTextInMenu(menu, firstTextPos, &currentTextPos, frameTimeText, fontSize,
                    BLACK, RED, noOp);
+  __DrawTextInMenu(menu, firstTextPos, &currentTextPos, render2DSpeedText,
+                   fontSize, BLACK, RED, noOp);
   __DrawTextInMenu(menu, firstTextPos, &currentTextPos, wireFrameText, fontSize,
                    BLACK, RED, noOp);
   __DrawTextInMenu(menu, firstTextPos, &currentTextPos, quitText, fontSize,

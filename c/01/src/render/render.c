@@ -10,6 +10,8 @@
 #include "menu.h"
 #include <time.h>
 
+float render2DSpeed = 0.2f;
+
 void Render_Window(Render *render) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "CA Renderer");
 
@@ -26,8 +28,8 @@ void Render_Window(Render *render) {
   Cells2D firstCd = {0};
   Cells2D secondCd = {0};
 
-  Cells2D_InitArraysBasedOnCellSize(render->firstGenArena, &firstCd);
-  Cells2D_InitArraysBasedOnCellSize(render->secondGenArena, &secondCd);
+  Cells2D_InitArraysBasedOnCellSize(render->mode2DArena, &firstCd);
+  Cells2D_InitArraysBasedOnCellSize(render->mode2DArena, &secondCd);
 
   GeneratorGOL2D_InitializeCells(&firstCd, true);
   GeneratorGOL2D_InitializeCells(&secondCd, false);
@@ -70,26 +72,26 @@ void Render_Window(Render *render) {
       isPaused = !isPaused;
     }
 
-    // TODO: The simulation is not working properly, because even for the
-    // initial state to go on to the next generation some cells need to be
-    // alive, in order for the whole grid not to die out.
+    if (pressed == 'w') {
+      render2DSpeed -= 0.001f;
+    }
 
-    if (isPaused == 0) {
+    if (pressed == 's') {
+      render2DSpeed += 0.001f;
+    }
+
+    if (isPaused == 0 && deltaTime >= render2DSpeed) {
       clock_t time = clock();
       if (CURRENT_GENERATION != 0) {
         if (CURRENT_GENERATION % 2 == 0) {
-          // TODO: For some reason, the first generation will be rendered
-          // correctly, but any subsequent (due to reset issues possibly)
-          // generation will be not.
           GeneratorGOL2D_NextGeneration(&firstCd, &secondCd);
-          __Render_ResetCells(render->secondGenArena, &secondCd);
         } else {
           GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
-          __Render_ResetCells(render->firstGenArena, &firstCd);
         }
+      } else {
+        CURRENT_GENERATION++;
       }
       deltaTime = 0;
-      GeneratorGOL2D_IncrementGen();
     }
 
     deltaTime += GetFrameTime();
@@ -108,17 +110,11 @@ void Render_Window(Render *render) {
     EndDrawing();
 
     // free objects after each frame
-    Arena_Free(render->frameArena);
+    Arena_Free(render->frame2DArena);
 
     // TODO: Check, if the mode changed, then free the modeArena
   }
 
   // teardown the objects after the window has been closed
-  Arena_Free(render->firstGenArena);
-  Arena_Free(render->secondGenArena);
-}
-
-void __Render_ResetCells(Arena *arena, Cells2D *c2d) {
-  // Arena_Free(arena);
-  // Cells2D_InitArraysBasedOnCellSize(arena, c2d);
+  Arena_Free(render->mode2DArena);
 }
