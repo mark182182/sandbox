@@ -9,15 +9,15 @@
 
 int CURRENT_GENERATION = 0;
 
-void GeneratorGOL2D_InitializeCells(Cells2D *cd) {
+void GeneratorGOL2D_InitializeCells(Cells2D *c2d) {
   int i = 0;
   for (int posX = 0; posX < SCREEN_WIDTH; posX += CELL_WIDTH_RATIO) {
     for (int posY = 0; posY < SCREEN_HEIGHT; posY += CELL_HEIGHT_RATIO) {
       bool is_alive = rand() % CELL_INITIAL_GRID_DENSITY == 0;
-      cd->cells[i].is_alive = is_alive;
-      cd->positionsX[i] = posX;
-      cd->positionsY[i] = posY;
-      cd->colors[i] = &RANDOM_COLORS[rand() % 2];
+      c2d->cells[i].is_alive = is_alive;
+      c2d->positionsX[i] = posX;
+      c2d->positionsY[i] = posY;
+      c2d->colors[i] = &RANDOM_COLORS[rand() % 2];
       i++;
     }
   }
@@ -28,18 +28,18 @@ const uint8_t OVERPOPULATION_UPPER_CAP = 3;
 
 // TODO: use a compute shader instead (since OpenGL 4.3)
 // possibly binding the 2 SSBOs and call glDispatchCompute and glMemoryBarrier
-void GeneratorGOL2D_NextGeneration(Cells2D *outputCells, Cells2D *inputCells) {
+void GeneratorGOL2D_NextGeneration(Cells2D *outC2d, Cells2D *inC2d) {
 
   for (int i = 0; i < CELL_COUNT; i++) {
-    int neighbours = __CheckNeighbours(inputCells, i);
+    int neighbours = __CheckNeighbours(inC2d, i);
     // under or overpopulation
     if (neighbours < UNDERPOPULATION_UPPER_CAP ||
         neighbours > OVERPOPULATION_UPPER_CAP) {
-      outputCells->cells[i].is_alive = false;
+      outC2d->cells[i].is_alive = false;
       // reproduction
-    } else if (!outputCells->cells[i].is_alive &&
+    } else if (!outC2d->cells[i].is_alive &&
                neighbours == OVERPOPULATION_UPPER_CAP) {
-      outputCells->cells[i].is_alive = true;
+      outC2d->cells[i].is_alive = true;
     }
   }
 
@@ -53,14 +53,14 @@ void GeneratorGOL2D_NextGeneration(Cells2D *outputCells, Cells2D *inputCells) {
  *
  * @return int: the number of neighbours
  */
-int __CheckNeighbours(Cells2D *previousCd, int i) {
+int __CheckNeighbours(Cells2D *inputCells, int i) {
   int neighbours = 0;
   int arraySize = (CELL_COUNT - 1);
 
   for (int j = 0; j < CELL_NEIGHBOUR_SIZE; j++) {
     int relativeIdx = i + DIAGONAL_INDEXES[j];
     if (relativeIdx >= 0 && relativeIdx <= arraySize &&
-        previousCd->cells[relativeIdx].is_alive) {
+        inputCells->cells[relativeIdx].is_alive) {
       // the relative diagonal cell
       neighbours++;
     }
@@ -69,7 +69,7 @@ int __CheckNeighbours(Cells2D *previousCd, int i) {
   for (int j = 0; j < CELL_NEIGHBOUR_SIZE; j++) {
     int relativeIdx = i + ADJECENT_INDEXES[j];
     if (relativeIdx >= 0 && relativeIdx <= arraySize &&
-        previousCd->cells[relativeIdx].is_alive) {
+        inputCells->cells[relativeIdx].is_alive) {
       // the adjecent diagonal cell
       neighbours++;
     }

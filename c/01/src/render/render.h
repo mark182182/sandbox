@@ -21,5 +21,5 @@ typedef struct Render {
 
 void Render_Window(Render *render);
 
-void __Render_ResetCells(Arena *arena, Cells2D *cells);
+void __Render_ResetCells(Arena *arena, Cells2D *c2d);
 #endif

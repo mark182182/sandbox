@@ -71,11 +71,15 @@ void Render_Window(Render *render) {
       isPaused = !isPaused;
     }
 
-    // TODO: The simulation is not working properly, because even for the initial state to go on to the next generation some cells need to be alive, in order for the whole grid not to die out.
+    // TODO: The simulation is not working properly, because even for the
+    // initial state to go on to the next generation some cells need to be
+    // alive, in order for the whole grid not to die out.
     if (isPaused == 0) {
       clock_t time = clock();
       if (CURRENT_GENERATION % 2 == 0) {
-        // TODO: For some reason, the first generation will be rendered correctly, but any subsequent (due to reset issues possibly) generation will be not.
+        // TODO: For some reason, the first generation will be rendered
+        // correctly, but any subsequent (due to reset issues possibly)
+        // generation will be not.
         GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
         //__Render_ResetCells(render->firstGenArena, &firstCd);
       } else {
@@ -109,7 +113,7 @@ void Render_Window(Render *render) {
   // teardown the objects after the window has been closed
 }
 
-void __Render_ResetCells(Arena *arena, Cells2D *cells) {
+void __Render_ResetCells(Arena *arena, Cells2D *c2d) {
   Arena_Free(arena);
-  Cells2D_InitArraysBasedOnCellSize(arena, cells);
+  Cells2D_InitArraysBasedOnCellSize(arena, c2d);
 }

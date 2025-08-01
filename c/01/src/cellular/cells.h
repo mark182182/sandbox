@@ -45,11 +45,6 @@ typedef struct Cells2D {
   Color **colors;
 } Cells2D;
 
-/*
- * Creates a deep copy of the given Cells2D and returns its pointer.
- */
-Cells2D *Cells2D_DeepCopyCells(Cells2D *originalCd);
-
-void Cells2D_InitArraysBasedOnCellSize(Arena *genArena, Cells2D *cd);
+void Cells2D_InitArraysBasedOnCellSize(Arena *genArena, Cells2D *c2d);
 
 #endif

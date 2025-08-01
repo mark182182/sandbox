@@ -19,7 +19,7 @@ static const size_t PERMANENT_STORAGE_SIZE = 24 * 1024 * 1024;
  * Example, if CELL_COUNT is 11.520:
  *
  * CELL_COUNT * (cells * positionX * positionY * colors) * (firstGenArena +
- * secondGenArena) = 11.520 * (4*4*4*4) * 2 = 737.280 or 720 KB
+ * secondGenArena) = 11.520 * (4*4*4*4) * 2 = 737.280 or 720 KB (this is not correct, see below)
  *
  * For some reason the actual used memory for one Cells2D will be: 195.840 (so
  * 196.608, 192KB), which would be 393.216 (384 KB)
