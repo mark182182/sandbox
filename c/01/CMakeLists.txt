@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
+cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
 
 # Set the C standard to C17, as it's one of the most recent stable standards, widely supported.
 set(CMAKE_C_STANDARD 17)

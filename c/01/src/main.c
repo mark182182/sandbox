@@ -1,4 +1,4 @@
-﻿#include "const.h"
+#include "const.h"
 #include "render/render.h"
 
 int main() {
