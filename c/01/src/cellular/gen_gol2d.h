@@ -10,7 +10,7 @@ extern int CURRENT_GENERATION;
 /*
  * Generate random values for each array
  */
-void GeneratorGOL2D_InitializeCells(Cells2D *c2d);
+void GeneratorGOL2D_InitializeCells(Cells2D *c2d, bool randomizeAlive);
 /*
  * Iterates the given cells to the next generation.
  *
@@ -24,5 +24,6 @@ void GeneratorGOL2D_InitializeCells(Cells2D *c2d);
  *
  */
 void GeneratorGOL2D_NextGeneration(Cells2D *outC2d, Cells2D *inC2d);
+void GeneratorGOL2D_IncrementGen();
 
 #endif

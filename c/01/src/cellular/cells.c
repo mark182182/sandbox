@@ -29,7 +29,6 @@ const int ADJECENT_INDEXES[] = {-1, +1, (-1 * CELL_HEIGHT_SIZE),
 void Cells2D_InitArraysBasedOnCellSize(Arena *arena, Cells2D *c2d) {
   Cell *cells = Arena_AllocAlignedZeroed(arena, CELL_COUNT * sizeof(Cell),
                                          DEFAULT_ARENA_ALIGNMENT);
-  assert(cells != NULL && "Unable to allocate cells");
 
   c2d->cells = cells;
 

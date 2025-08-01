@@ -79,7 +79,7 @@ typedef struct Arena {
 /**
  * Initial reservation with a backing byte storage as memory.
  */
-Arena Arena_Init(char *name, uint8_t *memory, size_t capacity);
+extern inline Arena Arena_Init(char *name, uint8_t *memory, size_t capacity);
 /**
  * "Bumps" the pointer forward and distributes the pre-allocated memory to the
  * caller. Will use padding to fill up to the specified boundary, e.g. 32
@@ -94,9 +94,11 @@ Arena Arena_Init(char *name, uint8_t *memory, size_t capacity);
  * @return the pointer to allocated memory, or NULL if insufficient space
 
  */
-void *Arena_AllocAligned(Arena *arena, size_t size, size_t alignment);
-void *Arena_AllocAlignedZeroed(Arena *arena, size_t size, size_t alignment);
+extern inline void *Arena_AllocAligned(Arena *arena, size_t size, size_t alignment);
+extern inline void *Arena_AllocAlignedZeroed(Arena *arena, size_t size,
+                                      size_t alignment);
 // frees all of the allocated memory at once
-void Arena_Free(Arena *arena);
+extern inline void Arena_Free(Arena *arena);
+extern inline void Arena_FreeZeroed(Arena *arena);
 
 #endif

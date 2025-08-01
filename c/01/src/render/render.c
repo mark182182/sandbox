@@ -29,8 +29,8 @@ void Render_Window(Render *render) {
   Cells2D_InitArraysBasedOnCellSize(render->firstGenArena, &firstCd);
   Cells2D_InitArraysBasedOnCellSize(render->secondGenArena, &secondCd);
 
-  GeneratorGOL2D_InitializeCells(&firstCd);
-  GeneratorGOL2D_InitializeCells(&secondCd);
+  GeneratorGOL2D_InitializeCells(&firstCd, true);
+  GeneratorGOL2D_InitializeCells(&secondCd, false);
 
   while (!WindowShouldClose() && pressed != 'q') {
     ClearBackground(WHITE);
@@ -61,10 +61,8 @@ void Render_Window(Render *render) {
     BeginDrawing();
 
     if (pressed == 'r') {
-      __Render_ResetCells(render->firstGenArena, &firstCd);
-      GeneratorGOL2D_InitializeCells(&firstCd);
-      __Render_ResetCells(render->secondGenArena, &secondCd);
-      GeneratorGOL2D_InitializeCells(&secondCd);
+      GeneratorGOL2D_InitializeCells(&firstCd, true);
+      GeneratorGOL2D_InitializeCells(&secondCd, false);
       CURRENT_GENERATION = 0;
     }
 
@@ -75,27 +73,31 @@ void Render_Window(Render *render) {
     // TODO: The simulation is not working properly, because even for the
     // initial state to go on to the next generation some cells need to be
     // alive, in order for the whole grid not to die out.
+
     if (isPaused == 0) {
       clock_t time = clock();
-      if (CURRENT_GENERATION % 2 == 0) {
-        // TODO: For some reason, the first generation will be rendered
-        // correctly, but any subsequent (due to reset issues possibly)
-        // generation will be not.
-        // GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
-        // __Render_ResetCells(render->firstGenArena, &firstCd);
-      } else {
-        // GeneratorGOL2D_NextGeneration(&firstCd, &secondCd);
-        // __Render_ResetCells(render->secondGenArena, &secondCd);
+      if (CURRENT_GENERATION != 0) {
+        if (CURRENT_GENERATION % 2 == 0) {
+          // TODO: For some reason, the first generation will be rendered
+          // correctly, but any subsequent (due to reset issues possibly)
+          // generation will be not.
+          GeneratorGOL2D_NextGeneration(&firstCd, &secondCd);
+          __Render_ResetCells(render->secondGenArena, &secondCd);
+        } else {
+          GeneratorGOL2D_NextGeneration(&secondCd, &firstCd);
+          __Render_ResetCells(render->firstGenArena, &firstCd);
+        }
       }
       deltaTime = 0;
+      GeneratorGOL2D_IncrementGen();
     }
+
     deltaTime += GetFrameTime();
 
-    Cells2D actualCd = CURRENT_GENERATION % 2 == 0 ? secondCd : firstCd;
+    Cells2D actualCd = CURRENT_GENERATION % 2 == 0 ? firstCd : secondCd;
 
     // TODO: This should be drawn in a single call
     for (int i = 0; i < CELL_COUNT; i++) {
-      assert(&actualCd != NULL);
       if (actualCd.cells[i].is_alive) {
         DrawRectangle(actualCd.positionsX[i], actualCd.positionsY[i],
                       CELL_HEIGHT_RATIO, CELL_WIDTH_RATIO, *actualCd.colors[i]);
@@ -112,9 +114,11 @@ void Render_Window(Render *render) {
   }
 
   // teardown the objects after the window has been closed
+  Arena_Free(render->firstGenArena);
+  Arena_Free(render->secondGenArena);
 }
 
 void __Render_ResetCells(Arena *arena, Cells2D *c2d) {
-  Arena_Free(arena);
-  Cells2D_InitArraysBasedOnCellSize(arena, c2d);
+  // Arena_Free(arena);
+  // Cells2D_InitArraysBasedOnCellSize(arena, c2d);
 }

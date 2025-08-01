@@ -9,12 +9,14 @@
 
 int CURRENT_GENERATION = 0;
 
-void GeneratorGOL2D_InitializeCells(Cells2D *c2d) {
+void GeneratorGOL2D_InitializeCells(Cells2D *c2d, bool randomizeAlive) {
   int i = 0;
   for (int posX = 0; posX < SCREEN_WIDTH; posX += CELL_WIDTH_RATIO) {
     for (int posY = 0; posY < SCREEN_HEIGHT; posY += CELL_HEIGHT_RATIO) {
-      bool is_alive = rand() % CELL_INITIAL_GRID_DENSITY == 0;
-      c2d->cells[i].is_alive = is_alive;
+      if (randomizeAlive) {
+        bool is_alive = rand() % CELL_INITIAL_GRID_DENSITY == 0;
+        c2d->cells[i].is_alive = is_alive;
+      }
       c2d->positionsX[i] = posX;
       c2d->positionsY[i] = posY;
       c2d->colors[i] = &RANDOM_COLORS[rand() % 2];
@@ -29,7 +31,6 @@ const uint8_t OVERPOPULATION_UPPER_CAP = 3;
 // TODO: use a compute shader instead (since OpenGL 4.3)
 // possibly binding the 2 SSBOs and call glDispatchCompute and glMemoryBarrier
 void GeneratorGOL2D_NextGeneration(Cells2D *outC2d, Cells2D *inC2d) {
-
   for (int i = 0; i < CELL_COUNT; i++) {
     int neighbours = __CheckNeighbours(inC2d, i);
     // under or overpopulation
@@ -37,13 +38,15 @@ void GeneratorGOL2D_NextGeneration(Cells2D *outC2d, Cells2D *inC2d) {
         neighbours > OVERPOPULATION_UPPER_CAP) {
       outC2d->cells[i].is_alive = false;
       // reproduction
-    } else if (!outC2d->cells[i].is_alive &&
+    } else if (!inC2d->cells[i].is_alive &&
                neighbours == OVERPOPULATION_UPPER_CAP) {
       outC2d->cells[i].is_alive = true;
     }
   }
+}
 
-  CURRENT_GENERATION++;
+void GeneratorGOL2D_IncrementGen() {
+  CURRENT_GENERATION = CURRENT_GENERATION + 1;
 }
 
 /**

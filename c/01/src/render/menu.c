@@ -66,8 +66,6 @@ void __DrawTextInMenu(Menu *menu, Vector2 firstTextPos, Vector2 *currentTextPos,
                       const char *textToDraw, int fontSize, Color rectColor,
                       Color textColor, void (*onCollisionFn)(void)) {
   Color currentRectColor = rectColor;
-  // TODO: For some reason the font's length is 0
-  // Works with the default font
   Vector2 textLength =
       MeasureTextEx(menu->selectedFont, textToDraw, fontSize, 0);
 
@@ -78,7 +76,7 @@ void __DrawTextInMenu(Menu *menu, Vector2 firstTextPos, Vector2 *currentTextPos,
 
   if (CheckCollisionPointRec(menu->cursorPosition, textRect)) {
     currentRectColor = GRAY;
-    // TODO: onCollisionFn();
+    onCollisionFn();
   }
 
   DrawRectangleRec(textRect, currentRectColor);
