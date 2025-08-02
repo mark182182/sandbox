@@ -1,4 +1,6 @@
 #include "const.h"
+#include <raylib.h>
+#include "dstructs/arena.h"
 
 // bool DEBUG_MODE = false;
 

@@ -72,7 +72,21 @@
     "bitset": "cpp",
     "string_view": "cpp",
     "test_util.h": "c",
-    "random": "c"
+    "random": "c",
+    "menu.h": "c",
+    "chrono": "c",
+    "ranges": "c",
+    "cstdint": "c",
+    "memory_resource": "c",
+    "fstream": "c",
+    "future": "c",
+    "iomanip": "c",
+    "mutex": "c",
+    "numeric": "c",
+    "optional": "c",
+    "sstream": "c",
+    "streambuf": "c",
+    "*.def": "c"
   },
   // Disable GitHub Copilot for C files
   "github.copilot.enable": {

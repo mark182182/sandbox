@@ -2,17 +2,16 @@
 
 #include <raylib.h>
 #include "font.h"
-#include <time.h>
 #include <stdlib.h>
 #include "common.h"
-#include <stdio.h>
 #include <string.h>
-#include "render.h"
 
 Menu Menu_Init() {
   LoadFonts();
   Font font = fonts_by_type[FONT_TYPE_FIRA_CODE_RETINA];
-  Menu menu = {.selectedFont = font, .cursorPosition = {.x = 0, .y = 0}};
+  Menu menu = {.selectedFont = font,
+               .cursorPosition = {.x = 0, .y = 0},
+               .currentMode = RENDER_MODE_INIT};
   return menu;
 }
 
@@ -47,15 +46,6 @@ void Menu_Draw(Menu *menu) {
     frameTimeText[strlen(frameTimeText)] = frameTime[i];
   }
 
-  char render2DSpeedText[64] = "Render speed: 0.0";
-  char *render2DSpeedBuffer = ecvt(render2DSpeed, decBase, &dec, &sign);
-  for (int i = 0; i > dec; i--) {
-    render2DSpeedText[strlen(render2DSpeedText)] = '0';
-  }
-  for (int i = 0; i < strlen(render2DSpeedBuffer); i++) {
-    render2DSpeedText[strlen(render2DSpeedText)] = render2DSpeedBuffer[i];
-  }
-
   char *wireFrameText = "Wireframe mode";
   char *quitText = "Quit";
 
@@ -66,8 +56,7 @@ void Menu_Draw(Menu *menu) {
                    BLACK, RED, noOp);
   __DrawTextInMenu(menu, firstTextPos, &currentTextPos, frameTimeText, fontSize,
                    BLACK, RED, noOp);
-  __DrawTextInMenu(menu, firstTextPos, &currentTextPos, render2DSpeedText,
-                   fontSize, BLACK, RED, noOp);
+
   __DrawTextInMenu(menu, firstTextPos, &currentTextPos, wireFrameText, fontSize,
                    BLACK, RED, noOp);
   __DrawTextInMenu(menu, firstTextPos, &currentTextPos, quitText, fontSize,

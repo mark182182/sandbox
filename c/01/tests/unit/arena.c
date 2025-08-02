@@ -1,12 +1,12 @@
 #include "dstructs/arena.h"
-#include <assert.h>;
+#include <assert.h>
 #include "test_util.h"
 
 uint8_t test_storage[1024];
 char *name = "test-arena";
 uint8_t *memory = &test_storage;
 size_t capacity = 64;
-size_t alignment = 32;
+size_t alignment = DEFAULT_ARENA_ALIGNMENT;
 
 typedef struct Foo {
   int bar;
@@ -14,9 +14,11 @@ typedef struct Foo {
 } Foo;
 
 // since there are 2 int fields in foo
-static_assert(sizeof(Foo) == 8);
+int FOO_SIZE = 8;
 
 void can_init_arena() {
+  assert(sizeof(Foo) == FOO_SIZE);
+
   Arena arena = Arena_Init(name, memory, capacity);
 
   assert(&arena != NULL);
@@ -28,11 +30,18 @@ void can_init_arena() {
 void can_alloc_arena_with_padding() {
   Arena arena = Arena_Init(name, memory, capacity);
 
-  Foo *foos = Arena_AllocAligned(&arena, sizeof(Foo) * 2, alignment);
+  uint8_t foosCount = 2;
+  // there aren't really any other ways to get the number of elements in the
+  // array, other than this or using macros this cannot be extracted to a
+  // function, since foos would be pass as a pointer and not as the array, so
+  // sizeof(foos) would be the size of the pointer in that case
+  Foo *foos = Arena_AllocAligned(&arena, sizeof(Foo) * foosCount, alignment);
 
   assert(foos != NULL);
   assert(&foos[0] != NULL);
   assert(&foos[1] != NULL);
+
+  assert(sizeof(foos) * sizeof(foos[0]) / alignment == foosCount);
 
   foos[0].bar = 1;
   foos[1].bar = 2;
@@ -84,15 +93,45 @@ void can_alloc_arena_with_padding() {
 }
 
 void can_alloc_and_zero_arena() {
-  // TODO
+  Arena arena = Arena_Init(name, memory, capacity);
+  Foo *foos = Arena_AllocAlignedZeroed(&arena, sizeof(Foo) * 2, alignment);
+
+  printf("\narena.used: %d\n", arena.used);
+  assert(arena.used == alignment);
+
+  // all foos should be zerod out
+  for (int i = 0; i < sizeof(foos) * sizeof(foos[0]) / alignment; i++) {
+    printf("\n&foos[i]: %d\n", foos[i].bar);
+    assert(foos[i].bar == 0);
+    assert(foos[i].baz == 0);
+  }
 }
 
 void can_free_arena() {
-  // TODO
+  Arena arena = Arena_Init(name, memory, capacity);
+  Foo *foos = Arena_AllocAligned(&arena, sizeof(Foo) * 2, alignment);
+  printf("\n%zu\n", sizeof(foos) * sizeof(foos[0]) / alignment);
+
+  for (int i = 0; i < sizeof(foos) * sizeof(foos[0]) / alignment; i++) {
+    foos[i].bar = 1;
+    foos[i].baz = 1;
+  }
+
+  printf("arena.used: %d", arena.used);
+  assert(arena.used == alignment);
+
+  Arena_FreeZeroed(&arena);
+  assert(arena.used == 0);
+
+  // all foos should be zerod out
+  for (int i = 0; i < sizeof(foos) * sizeof(foos[0]) / alignment; i++) {
+    printf("\n&foos[i]: %d\n", foos[i].bar);
+    assert(foos[i].bar == 0);
+    assert(foos[i].baz == 0);
+  }
 }
 
 int main() {
-  TestCase c1 = {"can_init_arena", can_init_arena};
   TestCase tests[] = {
       {.name = "can_init_arena", .testFn = can_init_arena},
       {.name = "can_alloc_arena_with_padding_used",

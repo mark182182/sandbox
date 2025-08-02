@@ -1,26 +1,31 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+#include "menu.h"
 #include "dstructs/arena.h"
 #include "cellular/cells.h"
 
-extern float render2DSpeed;
-
-typedef enum RenderMode {
-  RENDER_MODE_INIT,
-  RENDER_MODE_2D,
-  RENDER_MODE_3D,
-  MAX_RENDER_MODE
-} RenderMode;
-
+/**
+ * The main render window that contains the render loop, where the the main
+ * menu gets drawn. Also used for selecting the other render modes via the menu.
+ */
 typedef struct Render {
   Arena *mode2DArena;
   Arena *mode3DArena;
   Arena *frame2DArena;
   Arena *frame3DArena;
-  RenderMode currentMode;
+
+  Menu *menu;
+
+  bool isWireframeMode;
+  // NOTE: might be worth replacing this to a ring buffer
+  int keyPressed;
+  bool isPaused;
+  float deltaTime;
+  int fpsCap;
+
 } Render;
 
-void Render_Window(Render *render);
+void Render_RenderWindow(Render *render);
 
 #endif

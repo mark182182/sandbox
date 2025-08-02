@@ -55,14 +55,14 @@ void GeneratorGOL2D_NextGeneration(Cells2D *outC2d, Cells2D *inC2d) {
  *
  * @return int: the number of neighbours
  */
-int __CheckNeighbours(Cells2D *inputCells, int i) {
+int __CheckNeighbours(Cells2D *inC2d, int i) {
   int neighbours = 0;
   int arraySize = (CELL_COUNT - 1);
 
   for (int j = 0; j < CELL_NEIGHBOUR_SIZE; j++) {
     int relativeIdx = i + DIAGONAL_INDEXES[j];
     if (relativeIdx >= 0 && relativeIdx <= arraySize &&
-        inputCells->cells[relativeIdx].is_alive) {
+        inC2d->cells[relativeIdx].is_alive) {
       // the relative diagonal cell
       neighbours++;
     }
@@ -71,7 +71,7 @@ int __CheckNeighbours(Cells2D *inputCells, int i) {
   for (int j = 0; j < CELL_NEIGHBOUR_SIZE; j++) {
     int relativeIdx = i + ADJECENT_INDEXES[j];
     if (relativeIdx >= 0 && relativeIdx <= arraySize &&
-        inputCells->cells[relativeIdx].is_alive) {
+        inC2d->cells[relativeIdx].is_alive) {
       // the adjecent diagonal cell
       neighbours++;
     }

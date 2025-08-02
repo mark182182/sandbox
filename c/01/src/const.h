@@ -17,10 +17,7 @@ extern bool DEBUG_MODE;
 // to omit it (would only be useable in some cases, e.g. when the a specified
 // value has to be passed of the given enum type to state the intent)
 
-enum {
-  SCREEN_WIDTH = 1280,
-  SCREEN_HEIGHT = 720,
-};
+enum { SCREEN_WIDTH = 1280, SCREEN_HEIGHT = 720, FPS_CAP = 60 };
 
 extern const Color RANDOM_COLORS[24];
 

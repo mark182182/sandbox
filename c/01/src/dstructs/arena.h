@@ -76,6 +76,7 @@ typedef struct Arena {
   uint8_t *memory; // the pointer to the backing memory storage,
   size_t capacity; // maximum possible memory to be allocated
   size_t used;     // the currently used memory
+  size_t size;     // the size of the arena respective to the objects in it
 } Arena;
 
 /**

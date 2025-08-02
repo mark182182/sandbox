@@ -1,8 +1,8 @@
 #ifndef STR_H
 #define STR_H
 
-#include <stdlib.h>;
-#include "dstructs/arena.h";
+#include <stdlib.h>
+#include "dstructs/arena.h"
 
 /**
  * The capacity is available via the arena.
