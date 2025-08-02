@@ -1,3 +1,5 @@
+# The rest of the project has been moved to https://github.com/mark182182/ca-thesis
+
 # CA Renderer
 
 This project is part of a thesis work for rendering 2D/3D cellular automata in C.
