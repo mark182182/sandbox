@@ -1,6 +1,6 @@
 # CA Renderer
 
-This project is part of thethes is work for rendering 2D/3D cellular automata in C.
+This project is part of a thesis work for rendering 2D/3D cellular automata in C.
 
 # Notes on AI usage
 

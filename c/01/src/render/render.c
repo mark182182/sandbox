@@ -15,6 +15,7 @@
 
 void Render_RenderWindow(Render *render) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "CA Renderer");
+  // must be called after InitWindow
   Menu menu = Menu_Init();
 
   render->menu = &menu;
